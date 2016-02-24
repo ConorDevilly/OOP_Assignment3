@@ -2,6 +2,11 @@
 This it the repository for my third OOP assignment.
 I'm not 100% sure what I'm doing yet.
 
+# EDIT: 20160224
+Alright, decided what I'm going try to do.
+I'm going to try and build a neural network that will recognise handwritten characters.
+I'm not sure how far I'll get, but if I can build a program that can correctly identify one single character at a time, I'll be happy
+
 I will be doing an app. This app for an exercise program that I follow. The program is called "Candito 6 Week Strength Program" and is available for free here: http://www.canditotraininghq.com/free-strength-programs/
 
 # Planned Features
