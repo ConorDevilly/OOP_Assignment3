@@ -1,30 +1,17 @@
 # OOP_Assignment3
-This it the repository for my third OOP assignment.
-I'm not 100% sure what I'm doing yet.
+This is the repository for my third OOP assignment.
 
-# EDIT: 20160224
-Alright, decided what I'm going try to do.
-I'm going to try and build a neural network that will recognise handwritten characters.
-I'm not sure how far I'll get, but if I can build a program that can correctly identify one single character at a time, I'll be happy
+I plan on making an [optical character recognition](https://en.wikipedia.org/wiki/Optical_character_recognition) system.
+This system will try to identify hand written characters. It will do this using a neural network.
 
-I will be doing an app. This app for an exercise program that I follow. The program is called "Candito 6 Week Strength Program" and is available for free here: http://www.canditotraininghq.com/free-strength-programs/
+It will work as follows:
+The user will take a picture of a character (possibly text, depending on how far I get) with their (Android) phone.
+The app will then send the picture to a web service.
+This service will be a neural network designed to recognise the characters.
+Once the network has guessed what character it is, a text file containing this character will be sent back to the user's phone.
 
-# Planned Features
-* An input screen to enter your current stats
-* An exercise program that will be generated based off the inputs above
-* Each program will be composed of 6 weeks, each week will have 3 - 5 days
-* There will be a number of views to the program
-  * A summary view, showing a week by week summary
-  * A week view, showing the individual days of each week
-  * A day view, showing the exercises to be performed on each day
-  * An exercise view which will allow to take notes / videos of a specific exercise
-* Other features will be added as I think of them
-
-This app will probably be quite simple so I am planning on doing something else if I have the time.
-My other idea is the write a preprocessor for the Tesseract OCR engine.
-Tesseract is an open source optical-character-recognition engine.
-However, it requires a lot of work before the engine is somewhat able to recognise hand written text.
-My goal would be to write a preprocessor that would automatically perform certain operations a picture of handwritten text before passing it to Tesseract to translate it to a text document.
-
-I would really like to work on the Tesseract project however I have no idea how to do it or how much time it will take to produce something that works.
-As a result of this I've decided to work mainly on the app as a kind of fallback.
+The following features will only be added if I manage to get the basic scenario above working:
+Allow the user to take a picture of full words / full pages.
+Run guessed words through a spell checker to aid accuracy. Changes this spell checker makes will aid the neural network.
+Allow users to create a profile. This profile would be used to help the network guess based on people's individual handwriting.
+Integrate with Dropbox / Google Drive and other 3rd party file sharing apps to allow users to send their text file 'to the cloud'.
