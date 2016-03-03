@@ -1,4 +1,4 @@
-package com.conordevilly.ocr;
+package com.conordevilly.ocr.neuralnetwork;
 
 import java.io.*;
 import java.util.Scanner;

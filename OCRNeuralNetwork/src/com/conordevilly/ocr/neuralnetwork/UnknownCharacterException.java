@@ -1,4 +1,4 @@
-package com.conordevilly.ocr;
+package com.conordevilly.ocr.neuralnetwork;
 
 public class UnknownCharacterException extends Exception{
 	/**
