@@ -1,10 +1,15 @@
 package com.conordevilly.ocr.imageprocessing;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
+import java.awt.image.ColorModel;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
 public class ImageProcessor {
@@ -20,9 +25,34 @@ public class ImageProcessor {
 		}
 	}
 	*/
+	private BufferedImage imgIn;
+	private ArrayList<Pixel> traverseList;
+	
+	public ImageProcessor(File input){
+		try {
+			imgIn = ImageIO.read(input);
+			traverseList = new ArrayList<Pixel>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public BufferedImage getChar(){
+		Character c = new Character(traverseList);
+		BufferedImage extractedCharacter = imgIn.getSubimage(c.getMinX(), c.getMinY(), c.getWidth(), c.getHeight());
+		return extractedCharacter ;
+	}
+	
+	public BufferedImage getImg(){
+		return imgIn;
+	}
+	
+	public void setImg(BufferedImage in){
+		imgIn = in;
+	}
 
-	//Convert to greyscale thenn apply threshold
-	public static BufferedImage greyScale(BufferedImage in){
+	//Convert image to binary (black / white) format
+	public static BufferedImage binarise(BufferedImage in){
 		//Create an image of the same height & width in Binary (0 or 255) mode
 		BufferedImage greyImage = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
 		//Draw our input onto our current image
@@ -32,6 +62,67 @@ public class ImageProcessor {
 				
 		return greyImage;
 	}
+	
+	public void binarise(){
+		//Create an image of the same height & width in Binary (0 or 255) mode
+		BufferedImage greyImage = new BufferedImage(imgIn.getWidth(), imgIn.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+		//Draw our input onto our current image
+		Graphics g2d = greyImage.createGraphics();
+		g2d.drawImage(imgIn, 0, 0, null);
+		g2d.dispose();
+		
+		imgIn = greyImage;
+	}
+	
+	
+	public void extractChars(){
+		for(int i = 0; i < imgIn.getWidth(); i++){
+			for(int j = 0; j < imgIn.getHeight(); j++){
+				if(pixelAt(i, j)){
+					traverse(new Pixel(i, j));
+				}
+			}
+		}
+	}
+
+	public void traverse(Pixel p){
+		if(pixelAt(p.getX(), p.getY())){
+			if(!traverseList.contains(p)){
+				traverseList.add(p);
+			}
+		}
+	}
+	
+	//Edge detection causes a stack overflow error.
+	public void edgeDetection(Pixel p){
+		traverseList.add(p);
+		
+		//Array of adjacent pixels
+		Pixel[] adjacent = new Pixel[8];
+		adjacent[0] = new Pixel(p.getX() - 1, p.getY() - 1);
+		adjacent[1] = new Pixel(p.getX() - 1, p.getY());
+		adjacent[2] = new Pixel(p.getX(), p.getY() - 1);
+		adjacent[3] = new Pixel(p.getX() + 1, p.getY() + 1);
+		adjacent[4] = new Pixel(p.getX() + 1, p.getY());
+		adjacent[5] = new Pixel(p.getX(), p.getY() + 1);
+		adjacent[6] = new Pixel(p.getX() + 1, p.getY() - 1);
+		adjacent[7] = new Pixel(p.getX() - 1, p.getY() + 1);
+		
+		//Check each adjacent pixel
+		for(Pixel adj : adjacent){
+			if(pixelAt(adj.getX(), adj.getY())){
+				if(!traverseList.contains(adj)){
+					edgeDetection(adj);
+				}
+			}
+		}
+	}
+	
+	public Boolean pixelAt(int x, int y){
+		Color c = new Color(imgIn.getRGB(x, y));
+		return c.equals(new Color(0, 0, 0));
+	}
+	
 	
 	public void scale(){
 		//image = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);

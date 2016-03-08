@@ -11,10 +11,12 @@ public class Testing {
 	}
 	
 	public Testing(){
-		try {
-			BufferedImage test = ImageIO.read(new File(getClass().getResource("/TestGS.png").toURI()));
-			BufferedImage out = ImageProcessor.greyScale(test);
-			//ImageIO.write(out, "png", new File(getClass().getResource("/out.png").toURI()));
+		try{
+			ImageProcessor ip = new ImageProcessor(new File(getClass().getResource("/TestGS.png").toURI()));
+			ip.binarise();
+			ip.extractChars();
+			
+			BufferedImage out = ip.getChar();
 			ImageIO.write(out, "png", new File("out.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
