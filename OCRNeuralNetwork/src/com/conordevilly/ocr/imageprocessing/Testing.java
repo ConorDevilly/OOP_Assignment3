@@ -16,7 +16,8 @@ public class Testing {
 			ip.binarise();
 			ip.extractChars();
 			
-			BufferedImage out = ip.getChar();
+			//BufferedImage out = ip.getChar();
+			BufferedImage out = ip.scale();
 			ImageIO.write(out, "png", new File("out.png"));
 		} catch (Exception e) {
 			e.printStackTrace();

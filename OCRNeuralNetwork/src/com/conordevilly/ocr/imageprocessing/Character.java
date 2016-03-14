@@ -1,9 +1,11 @@
 package com.conordevilly.ocr.imageprocessing;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Character {
 	
+	//Todo: Pass in sub image
 	private ArrayList<Pixel> pixels;
 	private int width, height;
 	private int minX, minY, maxX, maxY;
@@ -11,6 +13,10 @@ public class Character {
 	public Character(ArrayList<Pixel> pixels){
 		this.pixels = pixels;
 		setProperties();
+	}
+	
+	//Moved to ImageProcessor
+	public void normalise(){
 	}
 	
 	private void setProperties(){
@@ -31,7 +37,6 @@ public class Character {
 	public int getHeight(){
 		return height;
 	}
-	
 	public int getWidth(){
 		return width;
 	}

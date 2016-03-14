@@ -2,6 +2,8 @@ package com.conordevilly.ocr.imageprocessing;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -41,6 +43,27 @@ public class ImageProcessor {
 		Character c = new Character(traverseList);
 		BufferedImage extractedCharacter = imgIn.getSubimage(c.getMinX(), c.getMinY(), c.getWidth(), c.getHeight());
 		return extractedCharacter ;
+	}
+	
+	public void normalize(){
+		//Create new 10 x 10 image
+		BufferedImage normalized = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
+		//The character we want to normalize
+		BufferedImage subChar = this.getChar();
+		
+		int scaleX = subChar.getWidth() * normalized.getWidth();
+		int scaleY = subChar.getHeight() * normalized.getHeight();
+		
+		//Temp large image used to scale
+		BufferedImage scaler = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_BYTE_BINARY);
+		
+		//Scale subChar up to scaler size by duplicating rows & cols
+		//Rows
+		for(int i = 0; i < scaleX; i += subChar.getWidth()){
+			//Cols
+			for(int j = 0; j < scaleY; j += subChar.getHeight()){
+			}
+		}
 	}
 	
 	public BufferedImage getImg(){
@@ -124,8 +147,17 @@ public class ImageProcessor {
 	}
 	
 	
-	public void scale(){
-		//image = image.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+	//Moved to normalize
+	public BufferedImage scale(){
+		Image scaledChar = this.getChar().getScaledInstance(10, 10, Image.SCALE_DEFAULT);
+		BufferedImage scale = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
+		
+		//Draw the scaledChar onto scale (basically casting an Image to BufferedImage
+		Graphics2D g2d = scale.createGraphics();
+		g2d.drawImage(scaledChar, 0, 0, null);
+		g2d.dispose();
+		
+		return scale;
 	}
 	
 	public void correctSkew(){
