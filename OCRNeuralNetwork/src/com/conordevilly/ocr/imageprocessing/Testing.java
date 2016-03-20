@@ -12,7 +12,7 @@ public class Testing {
 	
 	public Testing(){
 		try{
-			ImageProcessor ip = new ImageProcessor(new File(getClass().getResource("/TestGS.png").toURI()));
+			ImageProcessor ip = new ImageProcessor(new File(getClass().getResource("/H.png").toURI()));
 			ip.binarise();
 			ip.extractChars();
 			

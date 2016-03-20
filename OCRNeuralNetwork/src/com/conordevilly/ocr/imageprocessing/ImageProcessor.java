@@ -98,6 +98,17 @@ public class ImageProcessor {
 		imgIn = greyImage;
 	}
 	
+	public float[] convertToNumbers(BufferedImage in){
+		float[] ret = new float[100];
+		
+		for(int i = 0; i < in.getHeight(); i++){
+			for(int j = 0; j < in.getWidth(); j++){
+				ret[(i * 10) + j] = (pixelAt(i, j)) ? 1 : 0;
+			}
+		}
+		
+		return ret;
+	}
 	
 	public void extractChars(){
 		for(int i = 0; i < imgIn.getWidth(); i++){
@@ -162,7 +173,7 @@ public class ImageProcessor {
 	
 	// Y = MX + C
 	// M = (nExiyi - ExiEyi) / (nExi2 - (Exi)2)
-public void correctSkew(){
+	public void correctSkew(){
 		AffineTransform transformer = new AffineTransform();
 		
 		
