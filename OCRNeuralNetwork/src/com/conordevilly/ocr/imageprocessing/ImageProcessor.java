@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
@@ -146,8 +147,7 @@ public class ImageProcessor {
 		return c.equals(new Color(0, 0, 0));
 	}
 	
-	
-	//Moved to normalize
+	//Dodgy replacment to normalize
 	public BufferedImage scale(){
 		Image scaledChar = this.getChar().getScaledInstance(10, 10, Image.SCALE_DEFAULT);
 		BufferedImage scale = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
@@ -160,7 +160,12 @@ public class ImageProcessor {
 		return scale;
 	}
 	
-	public void correctSkew(){
-		//TODO
+	// Y = MX + C
+	// M = (nExiyi - ExiEyi) / (nExi2 - (Exi)2)
+public void correctSkew(){
+		AffineTransform transformer = new AffineTransform();
+		
+		
+		
 	}
 }
