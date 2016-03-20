@@ -1,16 +1,28 @@
 package com.conordevilly.ocr.neuralnetwork;
 
-public class OutputNeuron {
+public class OutputNeuron extends Neuron{
+	private static final long serialVersionUID = 136667151777922479L;
 	int[] inputs;
 	int[] weights;
 	float bias;
 	float output;
+	char letter;
 	
-	public OutputNeuron(float bias, int[] weights){
+	public OutputNeuron(char letter, float bias, int[] weights){
+		this.letter = letter;
 		this.bias = bias;
 		this.weights = weights;
 	}
 	
+	public String toString(){
+		String s = bias + ": ";
+		for(int i = 0; i < weights.length; i++){
+			s += (weights[i] + ", ");
+		}
+		return s;
+	}
+	
+	@Override
 	public float process(){
 		//Calc output
 		for(int i = 0; i < inputs.length; i++){
@@ -18,9 +30,19 @@ public class OutputNeuron {
 			output += (inputs[i] == weights[i]) ? 0.1 : 0;
 		}
 		
-		//Add bias
-		output *= bias;
+		//Add bias (bias expressed as fraction as opposed to percent)
+		output *= (bias / 100);
 		
 		return output;
+	}
+
+	@Override
+	public void forward() {
+		//This layer does not forward		
+	}
+
+	@Override
+	public void backPropagate() {
+		//How the hell does this work?		
 	}
 }

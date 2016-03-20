@@ -98,8 +98,8 @@ public class ImageProcessor {
 		imgIn = greyImage;
 	}
 	
-	public float[] convertToNumbers(BufferedImage in){
-		float[] ret = new float[100];
+	public int[] convertToNumbers(BufferedImage in){
+		int[] ret = new int[100];
 		
 		for(int i = 0; i < in.getHeight(); i++){
 			for(int j = 0; j < in.getWidth(); j++){

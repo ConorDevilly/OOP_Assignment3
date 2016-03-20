@@ -5,7 +5,8 @@ package com.conordevilly.ocr.neuralnetwork;
  * Recieves a single pixel as input.
  * Simply forwards this to all output neurons
  */
-public class InputNeuron{
+public class InputNeuron extends Neuron{
+	private static final long serialVersionUID = 5294755918675102781L;
 	int input;
 	int index;
 	OutputNeuron[] outputs;
@@ -16,9 +17,20 @@ public class InputNeuron{
 		outputs = out;
 	}
 	
-	public void process(){
+	@Override
+	public void forward(){
 		for(int i = 0; i < outputs.length; i++){
-			outputs[i].inputs[index] = input;
+			outputs[i].inputs[index] = (int) process();
 		}
+	}
+	
+	@Override
+	public float process(){
+		return input;
+	}
+	
+	@Override
+	public void backPropagate() {
+		//No need to backPropagate as this layer doesn't acutally do anything but forward data
 	}
 }
