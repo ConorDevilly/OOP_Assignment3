@@ -101,9 +101,9 @@ public class ImageProcessor {
 	public int[] convertToNumbers(BufferedImage in){
 		int[] ret = new int[100];
 		
-		for(int i = 0; i < in.getHeight(); i++){
-			for(int j = 0; j < in.getWidth(); j++){
-				ret[(i * 10) + j] = (pixelAt(i, j)) ? 1 : 0;
+		for(int i = 0; i < in.getWidth(); i++){
+			for(int j = 0; j < in.getHeight(); j++){
+				ret[(j * 10) + i] = (pixelAt(in, i, j)) ? 1 : 0;
 			}
 		}
 		
@@ -151,6 +151,11 @@ public class ImageProcessor {
 				}
 			}
 		}
+	}
+	
+	public Boolean pixelAt(BufferedImage img, int x, int y){
+		Color c = new Color(img.getRGB(x, y));
+		return c.equals(new Color(0, 0, 0));
 	}
 	
 	public Boolean pixelAt(int x, int y){

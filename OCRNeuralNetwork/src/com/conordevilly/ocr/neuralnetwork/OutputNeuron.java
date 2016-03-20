@@ -15,8 +15,9 @@ public class OutputNeuron extends Neuron{
 	}
 	
 	public String toString(){
-		String s = bias + ": ";
+		String s = letter + ": " + bias + ": ";
 		for(int i = 0; i < weights.length; i++){
+			if(i % 10 == 0) s += "\n";
 			s += (weights[i] + ", ");
 		}
 		return s;

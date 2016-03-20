@@ -8,13 +8,13 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
 public class PersistanceManager {
-	public static Neuron read(File f){
-		Neuron n = null;
+	public static OutputNeuron read(File f){
+		OutputNeuron n = null;
 
 		try{
 			FileInputStream in = new FileInputStream(f);
 			ObjectInputStream reader = new ObjectInputStream(in);
-			n = (Neuron) reader.readObject();
+			n = (OutputNeuron) reader.readObject();
 			reader.close();
 			in.close();
 		}catch (Exception e){
@@ -26,7 +26,7 @@ public class PersistanceManager {
 	
 	public static void write(OutputNeuron n){
 		try{
-			FileOutputStream out = new FileOutputStream(new File(n.letter + ".data"));
+			FileOutputStream out = new FileOutputStream(new File("src/neurons/" + n.letter + ".data"));
 			ObjectOutputStream writer = new ObjectOutputStream(out);
 			writer.writeObject(n);
 			writer.close();
