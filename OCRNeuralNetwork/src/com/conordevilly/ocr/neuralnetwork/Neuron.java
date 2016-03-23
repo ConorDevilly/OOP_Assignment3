@@ -103,7 +103,7 @@ public abstract class Neuron implements java.io.Serializable{
 	}
 	
 	//Forward output to the next layer
-	public void feedforward(){
+	public float feedforward(){
 		for(Neuron n : nextLayer){
 			try {
 				n.addInput(output);
@@ -111,6 +111,7 @@ public abstract class Neuron implements java.io.Serializable{
 				e.printStackTrace();
 			}
 		}
+		return output;
 	}
 	
 	//Printable rep of neuron

@@ -6,4 +6,9 @@ public class OutputNeuron extends Neuron{
 	public OutputNeuron(int numInputs) {
 		super(numInputs, null);
 	}
+	
+	@Override
+	public float feedforward(){
+		return output;
+	}
 }
