@@ -8,19 +8,17 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
 public class PersistanceManager {
-	public static OutputNeuron read(File f){
-		OutputNeuron n = null;
-
+	public static Neuron read(File f){
+		Neuron n = null;
 		try{
 			FileInputStream in = new FileInputStream(f);
 			ObjectInputStream reader = new ObjectInputStream(in);
-			n = (OutputNeuron) reader.readObject();
+			n = (Neuron) reader.readObject();
 			reader.close();
 			in.close();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-
 		return n;
 	}
 	
