@@ -1,7 +1,10 @@
 package com.conordevilly.ocr.neuralnetwork;
 
+import com.conordevilly.ocr.imageprocessing.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NeuralNetwork {
 	
@@ -27,6 +30,21 @@ public class NeuralNetwork {
 		}
 	}
 	
+	public HashMap<String, Float> process(BufferedImage input){
+		HashMap<String, Float> results = new HashMap<String, Float>();
+		
+		/*
+		 * ImageProcessing shit
+		 */
+		
+		/*
+		 * NN Shit
+		 */
+		
+		return results;		
+	}
+	
+	//Read neurons if they exist, else create them
 	public void initNeurons() throws TooManyNeuronsException{
 		//Create the input layer
 		int res = (int) Math.pow(picSize, 2);

@@ -1,6 +1,5 @@
 package com.conordevilly.ocr.imageprocessing;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Character {

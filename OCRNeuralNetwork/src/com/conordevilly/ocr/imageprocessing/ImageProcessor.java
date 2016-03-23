@@ -16,18 +16,6 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class ImageProcessor {
-	
-	/*
-	BufferedImage originImage;
-	
-	public ImageProcessor(File origin){
-		try {
-			originImage = ImageIO.read(origin);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	*/
 	private BufferedImage imgIn;
 	private ArrayList<Pixel> traverseList;
 	
@@ -40,51 +28,19 @@ public class ImageProcessor {
 		}
 	}
 	
+	//TODO: Implement
+	public static ArrayList<Integer> process(BufferedImage input){
+		BufferedImage binarised = binarise(input);
+		BufferedImage extracted = extractChars(input);
+		BufferedImage scaled = scale(extracted);
+		ArrayList<Integer> numbericRep = convertToNumbers(scaled);
+		return numbericRep;
+	}
+	
 	public BufferedImage getChar(){
 		Character c = new Character(traverseList);
 		BufferedImage extractedCharacter = imgIn.getSubimage(c.getMinX(), c.getMinY(), c.getWidth(), c.getHeight());
 		return extractedCharacter ;
-	}
-	
-	public void normalize(){
-		//Create new 10 x 10 image
-		BufferedImage normalized = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
-		//The character we want to normalize
-		BufferedImage subChar = this.getChar();
-		
-		int scaleX = subChar.getWidth() * normalized.getWidth();
-		int scaleY = subChar.getHeight() * normalized.getHeight();
-		
-		//Temp large image used to scale
-		BufferedImage scaler = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_BYTE_BINARY);
-		
-		//Scale subChar up to scaler size by duplicating rows & cols
-		//Rows
-		for(int i = 0; i < scaleX; i += subChar.getWidth()){
-			//Cols
-			for(int j = 0; j < scaleY; j += subChar.getHeight()){
-			}
-		}
-	}
-	
-	public BufferedImage getImg(){
-		return imgIn;
-	}
-	
-	public void setImg(BufferedImage in){
-		imgIn = in;
-	}
-
-	//Convert image to binary (black / white) format
-	public static BufferedImage binarise(BufferedImage in){
-		//Create an image of the same height & width in Binary (0 or 255) mode
-		BufferedImage greyImage = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
-		//Draw our input onto our current image
-		Graphics g2d = greyImage.createGraphics();
-		g2d.drawImage(in, 0, 0, null);
-		g2d.dispose();
-				
-		return greyImage;
 	}
 	
 	public void binarise(){
@@ -153,7 +109,7 @@ public class ImageProcessor {
 		}
 	}
 	
-	public Boolean pixelAt(BufferedImage img, int x, int y){
+	public static Boolean pixelAt(BufferedImage img, int x, int y){
 		Color c = new Color(img.getRGB(x, y));
 		return c.equals(new Color(0, 0, 0));
 	}
@@ -163,7 +119,7 @@ public class ImageProcessor {
 		return c.equals(new Color(0, 0, 0));
 	}
 	
-	//Dodgy replacment to normalize
+	//Scale the image
 	public BufferedImage scale(){
 		Image scaledChar = this.getChar().getScaledInstance(10, 10, Image.SCALE_DEFAULT);
 		BufferedImage scale = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
@@ -179,9 +135,6 @@ public class ImageProcessor {
 	// Y = MX + C
 	// M = (nExiyi - ExiEyi) / (nExi2 - (Exi)2)
 	public void correctSkew(){
-		AffineTransform transformer = new AffineTransform();
-		
-		
-		
+		//TODO
 	}
 }
