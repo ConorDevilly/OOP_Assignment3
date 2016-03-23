@@ -5,19 +5,20 @@ import java.util.ArrayList;
 
 public class NeuralNetwork {
 	
-	ArrayList<HiddenNeuron> hiddenLayer1;
-	ArrayList<InputNeuron> inputLayer;
-	OutputNeuron outputLayer;
-	int picSize;
-	int numOutputs;
-	
-	public NeuralNetwork(int picSize, int numOutputs){
-		this.picSize = picSize;
-		this.numOutputs = numOutputs;
+	ArrayList<Neuron> inputLayer;
+	ArrayList<Neuron> hiddenLayer1;
+	ArrayList<Neuron> outputLayer;
 
-		hiddenLayer1 = new ArrayList<HiddenNeuron>();
-		inputLayer = new ArrayList<InputNeuron>();
-		outputLayer = new OutputNeuron();
+	int picSize;
+	int numPossiblities;
+	
+	public NeuralNetwork(int picSize, int numPossiblities){
+		this.picSize = picSize;
+		this.numPossiblities = numPossiblities;
+
+		inputLayer = new ArrayList<Neuron>();
+		hiddenLayer1 = new ArrayList<Neuron>();
+		outputLayer = new ArrayList<Neuron>();
 
 		try{
 			initNeurons();
@@ -30,7 +31,7 @@ public class NeuralNetwork {
 		//Create the input layer
 		int res = (int) Math.pow(picSize, 2);
 		for(int i = 0; i < res; i++){
-			inputLayer.add(new InputNeuron(in, ind, out));
+			inputLayer.add(new InputNeuron(hiddenLayer1));
 		}
 		
 		//Load the hidden layer, else create a new one
@@ -45,20 +46,20 @@ public class NeuralNetwork {
 		}
 		
 		//Verify that the correct number of HiddenNeurons have been created
-		if(hiddenLayer1.size() > numOutputs){
-			throw new TooManyNeuronsException(hiddenLayer1.size(), numOutputs);
+		if(hiddenLayer1.size() > numPossiblities){
+			throw new TooManyNeuronsException(hiddenLayer1.size(), numPossiblities);
 		}else{
 			//Create more neurons if we do not have enough
-			while(hiddenLayer1.size() < numOutputs){
-				hiddenLayer1.add(new HiddenNeuron(letter, bias, weights));
+			while(hiddenLayer1.size() < numPossiblities){
+				hiddenLayer1.add(new HiddenNeuron(numPossiblities, outputLayer));
 			}
 		}
 	}
 	
 	//Write the hidden layer
 	public void saveNeurons(){
-		for(HiddenNeuron n : hiddenLayer1){
-			PersistanceManager.write(n);
+		for(int i = 0; i < hiddenLayer1.size(); i++){
+			PersistanceManager.write(hiddenLayer1.get(i), i);
 		}
 	}
 }
