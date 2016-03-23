@@ -36,9 +36,4 @@ public class HiddenNeuron extends Neuron{
 		
 		return output;
 	}
-
-	@Override
-	public void forward() {
-		//This layer does not forward		
-	}
 }

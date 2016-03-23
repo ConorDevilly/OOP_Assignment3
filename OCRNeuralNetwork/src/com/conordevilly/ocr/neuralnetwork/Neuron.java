@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Neuron implements java.io.Serializable{
 	
+	float bias;
 	ArrayList<Float> inputs;
 	ArrayList<Float> weights;
 	float output;
@@ -16,14 +17,15 @@ public abstract class Neuron implements java.io.Serializable{
 		inputs = new ArrayList<Float>();
 		weights = new ArrayList<Float>();
 		this.nextLayer = nextLayer;
+		bias = 1;
 	}
 	
 	//Give and input, process it and feed forward to the next layer
-	public void run(ArrayList<Float> in) throws TooManyInputsException{
+	public void run(ArrayList<Float> in) throws TooManyInputsException, SizeMismatchException{
 		setInputs(in);
 		run();
 	}
-	public void run(){
+	public void run() throws SizeMismatchException{
 		process();
 		feedforward();
 	}
@@ -64,12 +66,29 @@ public abstract class Neuron implements java.io.Serializable{
 		}
 	}
 	
+	//Set a bias
+	public void setBias(float f){
+		bias = f;
+	}
+	
+	//Randomise all weights
+	public void randomiseWeights(){
+		for(int i = 0; i < weights.size(); i++){
+			weights.set(i, (float) Math.random());
+		}
+	}
+	
 	//Basic template for processing inputs
-	public void process(){
+	public void process() throws SizeMismatchException{
 		output = 0;
+		
+		//Check that the size of the weights and inputs match before processing 
+		if(arrSizeMatch(weights, inputs)) throw new SizeMismatchException();
+		
 		for(int i = 0; i < inputs.size(); i++){
 			output += inputs.get(i) * weights.get(i);
 		}
+		output *= bias;
 	}
 
 	//General rule for correcting weights
@@ -92,6 +111,15 @@ public abstract class Neuron implements java.io.Serializable{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	//Printable rep of neuron
+	public String toString(){
+		String s = bias + ": ";
+		for(int i = 0; i < weights.size(); i++){
+			s += (weights.get(i) + ", ");
+		}
+		return s;
 	}
 
 	//Check that the size of the input is ok

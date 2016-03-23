@@ -1,5 +1,7 @@
 package com.conordevilly.ocr.neuralnetwork;
 
+import java.util.ArrayList;
+
 /*
  * Simple perceptron.
  * Takes a single integer input and forwards it another layer
@@ -7,11 +9,14 @@ package com.conordevilly.ocr.neuralnetwork;
 public class InputNeuron extends Neuron{
 	private static final long serialVersionUID = 5294755918675102781L;
 
-	public InputNeuron() {
-		super(1);
-		weights[0] = 1;
-	}
+	//Create a neuron taking 1 input & set its weight to one
+	public InputNeuron(ArrayList<Neuron> nextLayer) {
+		super(1, nextLayer);
 
-	@Override
-	public void forward(){};
+		try {
+			addWeight(1);
+		} catch (TooManyInputsException e) {
+			e.printStackTrace();
+		}
+	}
 }
