@@ -55,7 +55,7 @@ public class Testing {
 		try{
 			File neuronDir = new File("src/neurons/");
 			for(File f : neuronDir.listFiles()){
-				OutputNeuron n = (OutputNeuron) PersistanceManager.read(f);
+				HiddenNeuron n = (HiddenNeuron) PersistanceManager.read(f);
 				System.out.println(n.toString());
 			}
 		}catch(Exception e){

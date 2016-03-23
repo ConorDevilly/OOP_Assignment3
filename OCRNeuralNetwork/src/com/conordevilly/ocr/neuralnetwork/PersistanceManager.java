@@ -22,7 +22,7 @@ public class PersistanceManager {
 		return n;
 	}
 	
-	public static void write(OutputNeuron n){
+	public static void write(HiddenNeuron n){
 		try{
 			FileOutputStream out = new FileOutputStream(new File("src/neurons/" + n.letter + ".data"));
 			ObjectOutputStream writer = new ObjectOutputStream(out);

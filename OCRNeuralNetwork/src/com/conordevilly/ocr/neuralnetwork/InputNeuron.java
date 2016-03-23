@@ -28,9 +28,4 @@ public class InputNeuron extends Neuron{
 	public float process(){
 		return input;
 	}
-	
-	@Override
-	public void backPropagate() {
-		//No need to backPropagate as this layer doesn't acutally do anything but forward data
-	}
 }
