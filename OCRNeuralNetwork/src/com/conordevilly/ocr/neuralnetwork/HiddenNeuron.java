@@ -1,39 +1,28 @@
 package com.conordevilly.ocr.neuralnetwork;
 
+import java.util.ArrayList;
+
 public class HiddenNeuron extends Neuron{
 	private static final long serialVersionUID = 136667151777922479L;
-	int[] inputs;
-	int[] weights;
-	float bias;
-	float output;
-	char letter;
-	
-	public HiddenNeuron(char letter, float bias, int[] weights){
-		this.letter = letter;
-		this.bias = bias;
-		this.weights = weights;
-	}
-	
-	public String toString(){
-		String s = letter + ": " + bias + ": ";
-		for(int i = 0; i < weights.length; i++){
-			if(i % 10 == 0) s += "\n";
-			s += (weights[i] + ", ");
-		}
-		return s;
+
+	public HiddenNeuron(int numInputs, ArrayList<Neuron> nextLayer) {
+		super(numInputs, nextLayer);
 	}
 	
 	@Override
-	public float process(){
-		//Calc output
-		for(int i = 0; i < inputs.length; i++){
-			//To improve: Increase percent if dif <= 0.5f
-			output += (inputs[i] == weights[i]) ? 0.1 : 0;
+	public float calcOutputDif(int index){
+		float ret = 0;
+		if(inputs.get(index) == 1){
+			ret = weights.get(index);
+		}else if(inputs.get(index) == 0){
+			ret = 1 - weights.get(index);
+		}else{
+			try {
+				throw new InvalidInputException();
+			} catch (InvalidInputException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		//Add bias (bias expressed as fraction as opposed to percent)
-		output *= (bias / 100);
-		
-		return output;
+		return ret;
 	}
 }

@@ -86,9 +86,13 @@ public abstract class Neuron implements java.io.Serializable{
 		if(arrSizeMatch(weights, inputs)) throw new SizeMismatchException();
 		
 		for(int i = 0; i < inputs.size(); i++){
-			output += inputs.get(i) * weights.get(i);
+			output += calcOutputDif(i);
 		}
 		output *= bias;
+	}
+	
+	public float calcOutputDif(int index){
+		return (inputs.get(index) * weights.get(index));
 	}
 
 	//General rule for correcting weights
