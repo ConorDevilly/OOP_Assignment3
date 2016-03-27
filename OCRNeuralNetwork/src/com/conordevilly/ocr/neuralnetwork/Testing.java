@@ -2,7 +2,7 @@ package com.conordevilly.ocr.neuralnetwork;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -20,7 +20,6 @@ public class Testing {
 		//Input Ns -> Output Ns -> Percentage chance
 		//TODO: if letter exists, read. Else, initalise it
 
-		/*
 		try{
 			File weightDir = new File(getClass().getResource("/Weights").toURI());
 			File[] files = weightDir.listFiles();
@@ -29,20 +28,25 @@ public class Testing {
 
 			for(int i = 0; i < files.length; i++){
 				File f = files[i];
-				ImageProcessor ip = new ImageProcessor(f);
-				ip.binarise();
-				ip.extractChars();
-				BufferedImage out = ip.scale();
+				BufferedImage img = ImageIO.read(f);
+
 
 				char name = f.getName().charAt(0);
 				String[] line = biasReader.readLine().split(":");
 				float bias = Float.parseFloat(line[1].trim());
-				int[] weights = ip.convertToNumbers(out);
+				ArrayList<Integer> weights = ImageProcessor.process(img, 10);
+				ArrayList<Float> convWeights = new ArrayList<Float>();
+				//Convert the weights to float before we can set them
+				for(Integer w : weights){
+					convWeights.add(w.floatValue());
+				}
+				//int[] weights = numbers.stream().mapToInt((Integer num) -> num.intValue()).toArray();
 
 				//TODO: Check input at biasReader
-				OutputNeuron n = new OutputNeuron(name, bias, weights);
+				HiddenNeuron n = new HiddenNeuron(100, null);
+				n.setWeights(convWeights);
 				//System.out.println(n.toString());
-				PersistanceManager.write(n);
+				PersistanceManager.write(n, i);
 			}
 			
 			biasReader.close();
@@ -50,7 +54,6 @@ public class Testing {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		*/
 		
 		try{
 			File neuronDir = new File("src/neurons/");

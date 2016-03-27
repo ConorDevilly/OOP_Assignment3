@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public abstract class Neuron implements java.io.Serializable{
 	
+	private static final long serialVersionUID = 1339248459008642578L;
 	float bias;
-	ArrayList<Float> inputs;
+	transient ArrayList<Float> inputs;
 	ArrayList<Float> weights;
-	float output;
+	transient float output;
 	ArrayList<Neuron> nextLayer;
 	int maxInputs;
 	
@@ -50,13 +51,13 @@ public abstract class Neuron implements java.io.Serializable{
 	
 	//Set weights
 	public void setWeights(ArrayList<Float> w) throws SizeMismatchException{
-		if(arrSizeMatch(inputs, w)){
+		if(arrSizeMatch(maxInputs, w.size())){
 			this.weights = w;
 		}else{
 			throw new SizeMismatchException();
 		}
 	}
-
+	
 	//Add a weight
 	public void addWeight(float w) throws TooManyInputsException{
 		if(inputSizeOk(weights.size() + 1)){
@@ -122,6 +123,7 @@ public abstract class Neuron implements java.io.Serializable{
 	public String toString(){
 		String s = bias + ": ";
 		for(int i = 0; i < weights.size(); i++){
+			if(i % 10 == 0) s += "\n";
 			s += (weights.get(i) + ", ");
 		}
 		return s;

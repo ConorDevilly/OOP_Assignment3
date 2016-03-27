@@ -30,14 +30,16 @@ public class ImageProcessor {
 	//Extracts a character from an image. "Removes whitespace from an image" would be another way of thinking about it
 	public static BufferedImage extractChar(BufferedImage input){
 		ArrayList<Pixel> traverseList = new ArrayList<Pixel>();
-		int minX = 0;
-		int minY = 0;
-		int maxX = Integer.MAX_VALUE;
-		int maxY = Integer.MAX_VALUE;
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		int height = 0;
+		int width = 0;
 
 		//Create a list of pixels. Also store the min & max pixels in the list
 		for(int i = 0; i < input.getWidth(); i++){
-			for(int j = 0; j < input.getHeight(); i++){
+			for(int j = 0; j < input.getHeight(); j++){
 				//Check if there's a pixel at i, j
 				if(pixelAt(input, i, j)){
 					
@@ -57,8 +59,11 @@ public class ImageProcessor {
 			}
 		}
 		
+		width = maxX - minX;
+		height = maxY - minY;
+		
 		//Return a sub image that contains the exact dimensions of the extracted character
-		return input.getSubimage(minX, minY, maxX - minX, maxY - minY);
+		return input.getSubimage(minX, minY, width, height);
 	}
 	
 	//Scales an image down
