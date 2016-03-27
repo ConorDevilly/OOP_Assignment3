@@ -1,25 +1,12 @@
 package com.conordevilly.ocr.imageprocessing;
 
+//A pixel. Simply an x, y coordinate.
 public class Pixel {
-	private int x;
-	private int y;
+	int x;
+	int y;
 	
 	public Pixel(int x, int y){
 		this.x = x;
-		this.y = y;
-	}
-	
-	public int getX(){
-		return x;
-	}
-	public int getY(){
-		return y;
-	}
-
-	public void setX(int x){
-		this.x = x;
-	}
-	public void setY(int y){
 		this.y = y;
 	}
 }

@@ -4,86 +4,97 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.color.ColorSpace;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
-import java.awt.image.ColorModel;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
 public class ImageProcessor {
-	private BufferedImage imgIn;
-	private ArrayList<Pixel> traverseList;
 	
-	public ImageProcessor(File input){
-		try {
-			imgIn = ImageIO.read(input);
-			traverseList = new ArrayList<Pixel>();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	//TODO: Implement
-	public static ArrayList<Integer> process(BufferedImage input){
+	//Run all methods in this class in order on a given image
+	public static ArrayList<Integer> process(BufferedImage input, int scaleSize){
 		BufferedImage binarised = binarise(input);
-		BufferedImage extracted = extractChars(input);
-		BufferedImage scaled = scale(extracted);
+		BufferedImage extracted = extractChar(binarised);
+		BufferedImage scaled = scale(extracted, scaleSize, scaleSize);
 		ArrayList<Integer> numbericRep = convertToNumbers(scaled);
 		return numbericRep;
 	}
 	
-	public BufferedImage getChar(){
-		Character c = new Character(traverseList);
-		BufferedImage extractedCharacter = imgIn.getSubimage(c.getMinX(), c.getMinY(), c.getWidth(), c.getHeight());
-		return extractedCharacter ;
+	//Convert an image to black & white
+	public static BufferedImage binarise(BufferedImage input){
+		BufferedImage blackWhiteImg = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+		Graphics g2d = blackWhiteImg.createGraphics();
+		g2d.drawImage(input, 0, 0, null);
+		g2d.dispose();
+		return blackWhiteImg;
 	}
 	
-	public void binarise(){
-		//Create an image of the same height & width in Binary (0 or 255) mode
-		BufferedImage greyImage = new BufferedImage(imgIn.getWidth(), imgIn.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
-		//Draw our input onto our current image
-		Graphics g2d = greyImage.createGraphics();
-		g2d.drawImage(imgIn, 0, 0, null);
+	//Extracts a character from an image. "Removes whitespace from an image" would be another way of thinking about it
+	public static BufferedImage extractChar(BufferedImage input){
+		ArrayList<Pixel> traverseList = new ArrayList<Pixel>();
+		int minX = 0;
+		int minY = 0;
+		int maxX = Integer.MAX_VALUE;
+		int maxY = Integer.MAX_VALUE;
+
+		//Create a list of pixels. Also store the min & max pixels in the list
+		for(int i = 0; i < input.getWidth(); i++){
+			for(int j = 0; j < input.getHeight(); i++){
+				//Check if there's a pixel at i, j
+				if(pixelAt(input, i, j)){
+					
+					//If there is, add it to the traverse list
+					Pixel p = new Pixel(i, j);
+					if(!traverseList.contains(p)){
+						//Add the pixel to the list
+						traverseList.add(p);
+						
+						//Check if the pixel is a min or max value
+						minX = (p.x < minX) ? p.x : minX;
+						minY = (p.y < minY) ? p.y : minY;
+						maxX = (p.x > maxX) ? p.x : maxX;
+						maxY = (p.y > maxY) ? p.y : maxY;
+					}
+				}
+			}
+		}
+		
+		//Return a sub image that contains the exact dimensions of the extracted character
+		return input.getSubimage(minX, minY, maxX - minX, maxY - minY);
+	}
+	
+	//Scales an image down
+	public static BufferedImage scale(BufferedImage input, int scaleX, int scaleY){
+		//Scale the image
+		Image scaledChar = input.getScaledInstance(scaleX, scaleY, Image.SCALE_DEFAULT);
+
+		//Convert the scaled image to a bufferedimage instance
+		BufferedImage scale = new BufferedImage(scaleX, scaleY, BufferedImage.TYPE_BYTE_BINARY);
+		Graphics2D g2d = scale.createGraphics();
+		g2d.drawImage(scaledChar, 0, 0, null);
 		g2d.dispose();
 		
-		imgIn = greyImage;
+		return scale;
+	}
+
+	//Returns true if the pixel at a given coord is black, else false
+	public static Boolean pixelAt(BufferedImage img, int x, int y){
+		Color c = new Color(img.getRGB(x, y));
+		return c.equals(new Color(0, 0, 0));
 	}
 	
-	public int[] convertToNumbers(BufferedImage in){
-		int[] ret = new int[100];
+	//Takes an image as input and returns an arraylist of integers. If a given pixel is black, its representation in the array list is a 1. Else its a 0.
+	public static ArrayList<Integer> convertToNumbers(BufferedImage input){
+		ArrayList<Integer> ret = new ArrayList<Integer>();
 		
-		for(int i = 0; i < in.getWidth(); i++){
-			for(int j = 0; j < in.getHeight(); j++){
-				ret[(j * 10) + i] = (pixelAt(in, i, j)) ? 1 : 0;
+		for(int i = 0; i < input.getWidth(); i++){
+			for(int j = 0; j < input.getHeight(); j++){
+				ret.add((pixelAt(input, i, j)) ? 1 : 0);
 			}
 		}
 		
 		return ret;
 	}
 	
-	public void extractChars(){
-		for(int i = 0; i < imgIn.getWidth(); i++){
-			for(int j = 0; j < imgIn.getHeight(); j++){
-				if(pixelAt(i, j)){
-					traverse(new Pixel(i, j));
-				}
-			}
-		}
-	}
-
-	public void traverse(Pixel p){
-		if(pixelAt(p.getX(), p.getY())){
-			if(!traverseList.contains(p)){
-				traverseList.add(p);
-			}
-		}
-	}
-	
+	/* Unused. Left in because it could be a useful method going forward
 	//Edge detection causes a stack overflow error.
 	public void edgeDetection(Pixel p){
 		traverseList.add(p);
@@ -108,33 +119,14 @@ public class ImageProcessor {
 			}
 		}
 	}
+	*/
 	
-	public static Boolean pixelAt(BufferedImage img, int x, int y){
-		Color c = new Color(img.getRGB(x, y));
-		return c.equals(new Color(0, 0, 0));
-	}
-	
-	public Boolean pixelAt(int x, int y){
-		Color c = new Color(imgIn.getRGB(x, y));
-		return c.equals(new Color(0, 0, 0));
-	}
-	
-	//Scale the image
-	public BufferedImage scale(){
-		Image scaledChar = this.getChar().getScaledInstance(10, 10, Image.SCALE_DEFAULT);
-		BufferedImage scale = new BufferedImage(10, 10, BufferedImage.TYPE_BYTE_BINARY);
-		
-		//Draw the scaledChar onto scale (basically casting an Image to BufferedImage
-		Graphics2D g2d = scale.createGraphics();
-		g2d.drawImage(scaledChar, 0, 0, null);
-		g2d.dispose();
-		
-		return scale;
-	}
-	
+	/* Unused method. Could be useful going forward
 	// Y = MX + C
 	// M = (nExiyi - ExiEyi) / (nExi2 - (Exi)2)
-	public void correctSkew(){
-		//TODO
+	public static BufferedImage correctSkew(BufferedImage input){
+		//Could use AffineTransformation to try this
+		return input;
 	}
+	*/
 }
