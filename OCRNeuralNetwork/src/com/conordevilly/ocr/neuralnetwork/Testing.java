@@ -19,7 +19,24 @@ public class Testing {
 		//Create 100 input neurons, one for each pixel of our preprocessed images
 		//Input Ns -> Output Ns -> Percentage chance
 		//TODO: if letter exists, read. Else, initalise it
+		
+		try{
+			NeuralNetwork nn = new NeuralNetwork(10, 26);
+			nn.saveNetwork();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			NeuralNetwork nn;
+			nn = (NeuralNetwork) PersistanceManager.readNN(new File("src/neurons/nn.data"));
+			nn.test();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
+		/*
 		try{
 			File weightDir = new File(getClass().getResource("/Weights").toURI());
 			File[] files = weightDir.listFiles();
@@ -69,4 +86,5 @@ public class Testing {
 			e.printStackTrace();
 		}
 	}
+	*/
 }

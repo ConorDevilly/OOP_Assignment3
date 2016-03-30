@@ -6,9 +6,9 @@ public abstract class Neuron implements java.io.Serializable{
 	
 	private static final long serialVersionUID = 1339248459008642578L;
 	float bias;
-	transient ArrayList<Float> inputs;
 	ArrayList<Float> weights;
-	transient float output;
+	ArrayList<Float> inputs;
+	float output;
 	ArrayList<Neuron> nextLayer;
 	int maxInputs;
 	
@@ -29,6 +29,10 @@ public abstract class Neuron implements java.io.Serializable{
 	public void run() throws SizeMismatchException{
 		process();
 		feedforward();
+	}
+	
+	public void clearInputs(){
+		inputs.clear();
 	}
 	
 	//Set the inputs
@@ -54,7 +58,7 @@ public abstract class Neuron implements java.io.Serializable{
 		if(arrSizeMatch(maxInputs, w.size())){
 			this.weights = w;
 		}else{
-			throw new SizeMismatchException();
+			throw new SizeMismatchException(maxInputs, w.size());
 		}
 	}
 	
@@ -84,7 +88,7 @@ public abstract class Neuron implements java.io.Serializable{
 		output = 0;
 		
 		//Check that the size of the weights and inputs match before processing 
-		if(arrSizeMatch(weights, inputs)) throw new SizeMismatchException();
+		if(!arrSizeMatch(weights, inputs)) throw new SizeMismatchException(inputs.size(), weights.size());
 		
 		for(int i = 0; i < inputs.size(); i++){
 			output += calcOutputDif(i);
@@ -97,13 +101,58 @@ public abstract class Neuron implements java.io.Serializable{
 	}
 
 	//General rule for correcting weights
-	public void correctWeights(ArrayList<Float> corrections) throws SizeMismatchException{
+	public void correctWeights(ArrayList<Float> corrections) throws SizeMismatchException, InvalidInputException{
 		if(arrSizeMatch(weights, corrections)){
 			for(int i = 0; i < corrections.size(); i++){
-				weights.set(i, weights.get(i) * corrections.get(i));
+				/*
+				 * x : 1	y += (ln(y) * (1/-10))	(y == 0) ? y += 0.5
+				 * x : 0	y -= (ln(10y) / 10)		(y < 1) ? y -= y/2
+				 * 
+				 * x : 1	(y == 0)	? y += 0.5 	: y += (ln(y) * (1/-10))
+				 * x : 0	(y < 1) 	? y -= y/2	: y -= (ln(10y) / 10)
+				 */
+				float correct = corrections.get(i);
+				float weight = weights.get(i);
+				
+				/*
+				 * Forumulae for the learning gradient:
+				 * 
+				 * x : 1 => {y : 0  => y += 0.5
+				 * 			{y !: 0 => y -= ln(y) * 1/10
+				 * 
+				 * x : 0 => {y : 1  => y -= 0.5
+				 * 			{y !: 1 => y += ln(1 - y) * 1/10
+				 * 
+				 * Where: 	x = Correct value
+				 * 			y = Current Weight
+				 */
+				
+				if(correct == 1){
+					//Trying to get ln0 is a calculation error, hence we handle it manually
+					if(weight == 0){
+						weight += 0.5;
+					}else{
+						weight -= (Math.log(weight) * (1f / 10f));
+					}
+				}else if(correct == 0){
+					if(weight == 1){
+						weight -= 0.5;
+					}else{
+						weight += (Math.log(1 - weight) * (1f / 10f));
+					}
+				}else{
+					throw new InvalidInputException();
+				}
+				
+				weights.set(i, weight);
+				
+				/*
+				float dif = corrections.get(i) - weights.get(i);
+				weights.set(i, weights.get(i) + dif);
+				*/
 			}
 		}else{
-			throw new SizeMismatchException();
+			throw new SizeMismatchException(weights.size(), corrections.size());
 		}
 	}
 	
