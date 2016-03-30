@@ -25,6 +25,7 @@ public class Testing {
 			File[] files = weightDir.listFiles();
 			Arrays.sort(files);
 			BufferedReader biasReader = new BufferedReader(new FileReader(new File(getClass().getResource("/LetterFrequency.txt").toURI())));
+			OutputNeuron out = new OutputNeuron(26);
 
 			for(int i = 0; i < files.length; i++){
 				File f = files[i];
@@ -34,6 +35,8 @@ public class Testing {
 				char name = f.getName().charAt(0);
 				String[] line = biasReader.readLine().split(":");
 				float bias = Float.parseFloat(line[1].trim());
+				out.addWeight(bias);
+				
 				ArrayList<Integer> weights = ImageProcessor.process(img, 10);
 				ArrayList<Float> convWeights = new ArrayList<Float>();
 				//Convert the weights to float before we can set them
@@ -46,10 +49,11 @@ public class Testing {
 				HiddenNeuron n = new HiddenNeuron(100, null);
 				n.setWeights(convWeights);
 				//System.out.println(n.toString());
-				PersistanceManager.write(n, i);
+				PersistanceManager.write(n, Integer.toString(i));
 			}
 			
 			biasReader.close();
+			PersistanceManager.write(out, "output");
 			System.out.println("Wrote all files");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -58,7 +62,7 @@ public class Testing {
 		try{
 			File neuronDir = new File("src/neurons/");
 			for(File f : neuronDir.listFiles()){
-				HiddenNeuron n = (HiddenNeuron) PersistanceManager.read(f);
+				Neuron n = (Neuron) PersistanceManager.read(f);
 				System.out.println(n.toString());
 			}
 		}catch(Exception e){

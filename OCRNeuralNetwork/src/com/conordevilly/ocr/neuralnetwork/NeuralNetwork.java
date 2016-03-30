@@ -15,6 +15,10 @@ public class NeuralNetwork {
 	int picSize;
 	int numPossiblities;
 	
+	public void test(){
+		System.out.println("NN initalised");
+	}
+	
 	public NeuralNetwork(int picSize, int numPossiblities){
 		this.picSize = picSize;
 		this.numPossiblities = numPossiblities;
@@ -32,10 +36,26 @@ public class NeuralNetwork {
 	
 	public HashMap<String, Float> process(BufferedImage input){
 		HashMap<String, Float> results = new HashMap<String, Float>();
+		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
 		
-		/*
-		 * ImageProcessing shit
-		 */
+		for(int i = 0; i < inputLayer.size(); i++){
+			Neuron n = inputLayer.get(i);
+			try {
+				n.addInput(numbers.get(i));
+				n.run();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		for(Neuron n : hiddenLayer1){
+			try {
+				n.run();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		
 		/*
 		 * NN Shit
@@ -43,6 +63,7 @@ public class NeuralNetwork {
 		
 		return results;		
 	}
+	
 	
 	//Read neurons if they exist, else create them
 	public void initNeurons() throws TooManyNeuronsException{
@@ -52,12 +73,16 @@ public class NeuralNetwork {
 			inputLayer.add(new InputNeuron(hiddenLayer1));
 		}
 		
-		//Load the hidden layer, else create a new one
+		//Load the hidden & outer layer, else create a new one
 		try{
 			File neuronDir = new File("src/neurons/");
 			for(File f : neuronDir.listFiles()){
-				HiddenNeuron n = (HiddenNeuron) PersistanceManager.read(f);
-				hiddenLayer1.add(n);
+				Neuron n = (Neuron) PersistanceManager.read(f);
+				if(n instanceof OutputNeuron){
+					outputLayer.add(n);
+				}else{
+					hiddenLayer1.add(n);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -74,10 +99,23 @@ public class NeuralNetwork {
 		}
 	}
 	
-	//Write the hidden layer
+	//Write the hidden & outer layers
 	public void saveNeurons(){
+		//Hidden layer
 		for(int i = 0; i < hiddenLayer1.size(); i++){
-			PersistanceManager.write(hiddenLayer1.get(i), i);
+			PersistanceManager.write(hiddenLayer1.get(i), Integer.toString(i));
 		}
+		//Output layer
+		for(int i = 0; i < outputLayer.size(); i++){
+			PersistanceManager.write(outputLayer.get(i), "output");
+		}
+	}
+
+	private ArrayList<Float> convIntListToFloatList(ArrayList<Integer> l){
+		ArrayList<Float> ret = new ArrayList<Float>();
+		for(Integer n : l){
+			ret.add(n.floatValue());
+		}
+		return ret;
 	}
 }

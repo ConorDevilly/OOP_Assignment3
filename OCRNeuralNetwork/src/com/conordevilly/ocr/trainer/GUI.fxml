@@ -14,7 +14,7 @@
 	    <Label text="Dir:"/>
 	    <TextField />
 	    <Button text="Select" onAction="#openFileChooser"/>
-	    <Button text="Load Images" />
+	    <!--<Button text="Load Images" />-->
     </HBox>
 
     <TableView fx:id="tableView" GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -26,18 +26,21 @@
 	    </items>
     </TableView>
 
-    <ImageView fx:id="imageView" GridPane.columnIndex="1" GridPane.rowIndex="1">
-	    <image>
-	    </image>
-    </ImageView>
+    <HBox alignment="center" GridPane.columnIndex="1" GridPane.rowIndex="1">
+	    <ImageView fx:id="imageView" fitWidth="100" fitHeight="100">
+		    <image>
+		    </image>
+	    </ImageView>
+    </HBox>
 
     <HBox spacing="10" alignment="center_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
 	    <Label text="Guess: " />
 	    <Text />
     </HBox>
+
     <HBox spacing="10" alignment="center_right" GridPane.columnIndex="1" GridPane.rowIndex="3">
 	    <Label text="Correct Answer: " />
-	    <TextField />
+	    <TextField fx:id="ansBox" onAction="#recordAnswer"/>
     </HBox>
 
 </GridPane>

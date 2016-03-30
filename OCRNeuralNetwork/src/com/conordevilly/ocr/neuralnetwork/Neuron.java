@@ -134,7 +134,7 @@ public abstract class Neuron implements java.io.Serializable{
 		return inputSizeOk(toChk.size());
 	}
 	private boolean inputSizeOk(int num){
-		return (num > maxInputs);
+		return (num <= maxInputs);
 	}
 	private boolean arrSizeMatch(ArrayList<Float> arr1, ArrayList<Float> arr2){
 		return arrSizeMatch(arr1.size(), arr2.size());
