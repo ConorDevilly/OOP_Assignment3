@@ -40,6 +40,7 @@ public class NeuralNetwork implements java.io.Serializable{
 		layers.add(outputLayer);
 
 		inNeurons();
+		references = new HashMap<String, ArrayList<Float>>();
 		loadReferences(new File("src/Weights"));
 		/*
 		try{
@@ -71,15 +72,28 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 	}
 	
-	public void correct(String s){
-		ArrayList<Float> cmp = references.get(s);
-		for(Neuron n : hiddenLayer1){
-			try {
-				n.correctWeights(cmp);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public void correct(String actual, HashMap<String, Float> results){
+		for(int i = 0; i < hiddenLayer1.size(); i++){
+			String iStr = Character.toString((char) (i + 65));
+			float percentSimilar = computeSimilarity(actual, iStr);
+			float output = results.get(iStr);
+
+			Neuron n = hiddenLayer1.get(i);
+			n.correct(percentSimilar, output);
 		}
+	}
+	
+	//Return how similar two characters are
+	private float computeSimilarity(String str1, String str2){
+		float similar = 0;
+		ArrayList<Float> s1 = references.get(str1);
+		ArrayList<Float> s2 = references.get(str2);
+		
+		for(int i = 0; i < s1.size(); i++){
+			similar += (s1.get(i) == s2.get(i)) ? 0.01 : 0;
+		}
+		
+		return similar;
 	}
 	
 	public HashMap<String, Float> process(BufferedImage input){

@@ -99,6 +99,13 @@ public abstract class Neuron implements java.io.Serializable{
 	public float calcOutputDif(int index){
 		return (inputs.get(index) * weights.get(index));
 	}
+	
+	public void correct(float actual, float output){
+		float weightChn = actual - output;
+		for(int i = 0; i < weights.size(); i++){
+			weights.set(i, weights.get(i) * weightChn);
+		}
+	}
 
 	//General rule for correcting weights
 	public void correctWeights(ArrayList<Float> corrections) throws SizeMismatchException, InvalidInputException{

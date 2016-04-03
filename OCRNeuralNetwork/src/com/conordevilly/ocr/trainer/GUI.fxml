@@ -46,7 +46,7 @@
 
     <HBox spacing="10" alignment="center_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
 	    <Label text="Guess: " />
-	    <Text />
+	    <Text fx:id="guess"/>
     </HBox>
 
     <HBox spacing="10" alignment="center_right" GridPane.columnIndex="1" GridPane.rowIndex="3">

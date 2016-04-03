@@ -23,6 +23,7 @@ public class OutputNeuron extends Neuron{
 		return results;
 	}
 	
+	
 	@Override
 	public float feedforward(){
 		return output;
