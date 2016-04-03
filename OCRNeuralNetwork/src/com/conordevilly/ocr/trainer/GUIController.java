@@ -51,11 +51,12 @@ public class GUIController {
 			results = nn.process(bufImg);
 			imageView.setImage(img);
 			updateTable(results);
+			setGuess(nn.getGuess());
 			imgListIterator++;
 			
 			//Reset the iterator if all images ran
 			//TODO: Warning text
-			imgListIterator = (imgListIterator + 1 == imgList.length) ? 0 : imgListIterator++;
+			imgListIterator = (imgListIterator + 1 > imgList.length) ? 0 : imgListIterator++;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

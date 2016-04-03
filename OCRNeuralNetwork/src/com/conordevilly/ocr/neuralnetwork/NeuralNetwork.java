@@ -21,7 +21,7 @@ public class NeuralNetwork implements java.io.Serializable{
 
 	int picSize;
 	int numPossiblities;
-	HashMap<String, ArrayList<Float>> references;
+	HashMap<String, ArrayList<Integer>> references;
 	
 	public void test(){
 		System.out.println("NN initalised");
@@ -39,9 +39,9 @@ public class NeuralNetwork implements java.io.Serializable{
 		layers.add(hiddenLayer1);
 		layers.add(outputLayer);
 
-		inNeurons();
-		references = new HashMap<String, ArrayList<Float>>();
+		references = new HashMap<String, ArrayList<Integer>>();
 		loadReferences(new File("src/Weights"));
+		inNeurons();
 		/*
 		try{
 			initNeurons();
@@ -63,13 +63,19 @@ public class NeuralNetwork implements java.io.Serializable{
 		for(File f : dir.listFiles()){
 			try {
 				String key = f.getName().substring(0, 1);
-				ArrayList<Float> vals;
-				vals = convIntListToFloatList(ImageProcessor.process(ImageIO.read(f), 10));
+				ArrayList<Integer> vals;
+				vals = ImageProcessor.process(ImageIO.read(f), 10);
 				references.put(key, vals);
+
+				if(key == "A"){
+					System.out.print("\n" + key + ": ");
+					vals.stream().forEach(element -> System.out.print(element + ", "));
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("\n\n");
 	}
 	
 	public void correct(String actual, HashMap<String, Float> results){
@@ -77,6 +83,8 @@ public class NeuralNetwork implements java.io.Serializable{
 			String iStr = Character.toString((char) (i + 65));
 			float percentSimilar = computeSimilarity(actual, iStr);
 			float output = results.get(iStr);
+
+			System.out.println("1: " + actual + "\t2: " + iStr + "\t%: " + percentSimilar + "\t\tOut: " + output);
 
 			Neuron n = hiddenLayer1.get(i);
 			n.correct(percentSimilar, output);
@@ -86,12 +94,13 @@ public class NeuralNetwork implements java.io.Serializable{
 	//Return how similar two characters are
 	private float computeSimilarity(String str1, String str2){
 		float similar = 0;
-		ArrayList<Float> s1 = references.get(str1);
-		ArrayList<Float> s2 = references.get(str2);
+		ArrayList<Integer> s1 = references.get(str1);
+		ArrayList<Integer> s2 = references.get(str2);
 		
 		for(int i = 0; i < s1.size(); i++){
-			similar += (s1.get(i) == s2.get(i)) ? 0.01 : 0;
+			similar += (s1.get(i) == s2.get(i)) ? 1 : 0;
 		}
+		
 		
 		return similar;
 	}
@@ -128,6 +137,11 @@ public class NeuralNetwork implements java.io.Serializable{
 		
 		results = out.getRes();
 		return results;		
+	}
+	
+	public String getGuess(){
+		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
+		return out.getGuess();
 	}
 	
 	
@@ -179,9 +193,11 @@ public class NeuralNetwork implements java.io.Serializable{
 		
 		for(int i = 0; i < numPossiblities; i++){
 			HiddenNeuron n = new HiddenNeuron(numInputs, outputLayer);
+			ArrayList<Float> initVals = convIntListToFloatList(references.get(Character.toString((char) (i+65))));
+
 			for(int j = 0; j < numInputs; j++){
 				try {
-					n.addWeight((float) Math.random());
+					n.addWeight(initVals.get(i));
 				} catch (TooManyInputsException e) {
 					e.printStackTrace();
 				}

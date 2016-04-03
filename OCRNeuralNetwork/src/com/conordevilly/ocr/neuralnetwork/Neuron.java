@@ -101,9 +101,14 @@ public abstract class Neuron implements java.io.Serializable{
 	}
 	
 	public void correct(float actual, float output){
-		float weightChn = actual - output;
+		//Need some shite to differentiate weight
+		float weightChn = output- actual;
+		weightChn /= 100f;
 		for(int i = 0; i < weights.size(); i++){
-			weights.set(i, weights.get(i) * weightChn);
+			float correctWeight = weightChn + weights.get(i);
+			correctWeight = (correctWeight >= 1.0) ? 1 : correctWeight;
+			correctWeight = (correctWeight <= 0) ? 0 : correctWeight;
+			weights.set(i, correctWeight);
 		}
 	}
 
