@@ -67,7 +67,7 @@ public class NeuralNetwork implements java.io.Serializable{
 				vals = ImageProcessor.process(ImageIO.read(f), 10);
 				references.put(key, vals);
 
-				if(key == "A"){
+				if(key.equals("A")){
 					System.out.print("\n" + key + ": ");
 					vals.stream().forEach(element -> System.out.print(element + ", "));
 				}
@@ -136,6 +136,8 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 		
 		results = out.getRes();
+		//DEBUG
+		System.out.println(hiddenLayer1.get(0).toString());
 		return results;		
 	}
 	
@@ -197,7 +199,12 @@ public class NeuralNetwork implements java.io.Serializable{
 
 			for(int j = 0; j < numInputs; j++){
 				try {
-					n.addWeight(initVals.get(i));
+					n.addWeight(initVals.get(j));
+
+					//DEBUG
+					if(i == 0){
+						//System.out.println(n.toString());
+					}
 				} catch (TooManyInputsException e) {
 					e.printStackTrace();
 				}

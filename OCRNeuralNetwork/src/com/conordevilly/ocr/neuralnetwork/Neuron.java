@@ -184,8 +184,8 @@ public abstract class Neuron implements java.io.Serializable{
 	public String toString(){
 		String s = bias + ": ";
 		for(int i = 0; i < weights.size(); i++){
-			if(i % 10 == 0) s += "\n";
-			s += (weights.get(i) + ", ");
+			//if(i % 10 == 0) s += "\n";
+			s += (weights.get(i).toString() + ", ");
 		}
 		return s;
 	}
