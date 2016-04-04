@@ -54,4 +54,7 @@
 	    <TextField fx:id="ansBox" onAction="#recordAnswer"/>
     </HBox>
 
+    <HBox spacing="10" alignment="center_right" GridPane.columnIndex="2" GridPane.rowIndex="3">
+	    <Button text="Next" onAction="#loadImage"/>
+    </HBox>
 </GridPane>

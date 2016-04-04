@@ -27,7 +27,33 @@ public class ImageProcessor {
 		return blackWhiteImg;
 	}
 	
-	//Extracts a character from an image. "Removes whitespace from an image" would be another way of thinking about it
+	//TODO: Scale image before running this
+	public static ArrayList<BufferedImage> extractIndivChar(BufferedImage input){
+		ArrayList<BufferedImage> ret = new ArrayList<BufferedImage>();
+		boolean pixFound;
+		boolean prev = false;
+		int lastX = 0;
+
+		for(int i = 0; i < input.getWidth(); i++){
+			pixFound = false;
+
+			for(int j = 0; j < input.getHeight(); j++){
+				pixFound = (pixelAt(input, i, j)) ? true : pixFound;
+			}
+
+			if((pixFound == true) && (pixFound != prev)){
+				ret.add(input.getSubimage(lastX, 0, i, input.getHeight()));
+				lastX = i;
+			}
+
+			prev = pixFound;
+		}
+		
+		return ret;
+		
+	}
+	
+	//Extracts a character from an image
 	public static BufferedImage extractChar(BufferedImage input){
 		ArrayList<Pixel> traverseList = new ArrayList<Pixel>();
 		int minX = Integer.MAX_VALUE;

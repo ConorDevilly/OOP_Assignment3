@@ -38,7 +38,7 @@ public class GUIController {
 		DirectoryChooser dirChooser = new DirectoryChooser();
 		File imgDir = dirChooser.showDialog(null);
 		imgList = imgDir.listFiles();
-		Arrays.sort(imgList);
+		//Arrays.sort(imgList);
 		imgListIterator = 0;
 		loadImage(null);
 	}
@@ -79,7 +79,9 @@ public class GUIController {
 		//TODO: Check text set
 		String ans = ansBox.getText(0, 1).toUpperCase();
 		ansBox.clear();
-		nn.correct(ans, results);
+		if(!guess.getText().equals(ans)){
+			nn.correct(ans, results);
+		}
 		loadImage(null);
 	}
 }
