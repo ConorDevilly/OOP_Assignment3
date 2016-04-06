@@ -17,6 +17,8 @@ import javafx.stage.FileChooser;
 public class MainController {
 	@FXML private Text guess;
 	@FXML private ImageView imageView;
+	@FXML private TextField ansBox;
+	File img;
 	NeuralNetwork nn;
 	
 	public void init(NeuralNetwork network){
@@ -25,7 +27,11 @@ public class MainController {
 
 	@FXML protected void openFileChooser(ActionEvent event){
 		FileChooser fileChooser = new FileChooser();
-		File img = fileChooser.showOpenDialog(null);
+		img = fileChooser.showOpenDialog(null);
+		displayImage(img);
+	}
+	
+	@FXML protected void refresh(ActionEvent event){
 		displayImage(img);
 	}
 	
@@ -39,6 +45,25 @@ public class MainController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	//TODO: Error checking
+	@FXML protected void correct(ActionEvent event){
+		char[] ans = ansBox.getText().toUpperCase().toCharArray();
+		ansBox.clear();
+
+		System.out.println("\n");
+		for(int i = 0; i < ans.length; i++){
+			char g = guess.getText().charAt(i);
+			char actual = ans[i];
+
+			//if(g != actual){
+				System.out.println("Guessed: " + g + "\tCorrected: " + actual);
+				nn.correct((actual - 65));
+			//}
+		}
+		
+		refresh(null);
 	}
 	
 	@FXML protected void setGuess(String s){

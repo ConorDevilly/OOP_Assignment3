@@ -99,6 +99,8 @@ public class ImageProcessor {
 		width = maxX - minX;
 		height = maxY - minY;
 		
+		//TODO: Check image not blank
+		
 		//Return a sub image that contains the exact dimensions of the extracted character
 		return input.getSubimage(minX, minY, width, height);
 	}

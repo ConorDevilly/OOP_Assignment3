@@ -20,6 +20,11 @@
 		</image>
 	</ImageView>
 
+	<Button onAction="#refresh" text="Refresh" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+
 	<Label text="Guess: " GridPane.rowIndex="2" GridPane.columnIndex="0"/>
 	<Text fx:id="guess" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+	<Label text="Actual: " GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+	<TextField fx:id="ansBox" onAction="#correct" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 </GridPane>

@@ -100,6 +100,8 @@ public abstract class Neuron implements java.io.Serializable{
 		return (inputs.get(index) * weights.get(index));
 	}
 	
+	//Broken. Possible fix is to modify the summation function to only increase chance iff positive value. 
+	//I.e: A black pix "activates" assoc. neuron
 	public void correct() throws InvalidInputException{
 		float weight;
 		float input;
