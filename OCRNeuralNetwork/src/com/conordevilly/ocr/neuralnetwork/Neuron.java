@@ -100,6 +100,63 @@ public abstract class Neuron implements java.io.Serializable{
 		return (inputs.get(index) * weights.get(index));
 	}
 	
+	public void correct() throws InvalidInputException{
+		float weight;
+		float input;
+		for(int i = 0; i < weights.size(); i++){
+			weight = weights.get(i);
+			input = inputs.get(i);
+			
+			if(input == 1){
+				//We have special cases for when the weight = 1 or 0 as computing ln1 or ln0 leads to errors
+				if(weight == 0){
+					weight += 0.5f;
+				}else{
+					weight += -(Math.log(weight) * (1f / 10f));
+				}
+			}else if(input == 0){
+				if(weight == 1){
+					weight -= 0.5f;
+				}else{
+					weight -= -(Math.log(1 - weight) * (1f / 10f));
+				}
+			}else{
+				throw new InvalidInputException();
+			}
+			
+			weights.set(i, weight);
+		}
+	}
+	
+	//DEBUG
+	public void correct(ArrayList<Float> corrections) throws SizeMismatchException, InvalidInputException{
+		if(corrections.size() != weights.size()){
+			throw new SizeMismatchException(weights.size(), corrections.size());
+		}
+		
+		for(int i = 0; i < corrections.size(); i++){
+			float correction = corrections.get(i);
+			float weight = weights.get(i);
+			
+			if(correction == 1){
+				if(weight == 0){
+					weight += 0.5f;
+				}else{
+					weight += -(Math.log(weight) * (1f / 10f));
+				}
+			}else if(correction == 0){
+				if(weight == 1){
+					weight -= 0.5f;
+				}else{
+					weight -= -(Math.log(1 - weight) * (1f / 10f));
+				}
+			}else{
+				throw new InvalidInputException();
+			}
+		}
+	}
+	
+	//DEBUG
 	public void correct(float actual, float output){
 		//Need some shite to differentiate weight
 		float weightChn = output- actual;

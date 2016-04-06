@@ -73,6 +73,16 @@ public class NeuralNetwork implements java.io.Serializable{
 		System.out.println("\n\n");
 	}
 	
+	public void correct(int actual){
+		Neuron n = hiddenLayer1.get(actual);
+
+		try {
+			n.correct();
+		} catch (InvalidInputException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void correct(String actual, HashMap<String, Float> results){
 		for(int i = 0; i < hiddenLayer1.size(); i++){
 			String iStr = Character.toString((char) (i + 65));

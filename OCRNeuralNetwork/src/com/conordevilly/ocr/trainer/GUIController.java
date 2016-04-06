@@ -77,10 +77,15 @@ public class GUIController {
 	
 	@FXML protected void recordAnswer(ActionEvent event){
 		//TODO: Check text set
-		String ans = ansBox.getText(0, 1).toUpperCase();
+		//Convert the string taken from the answer box to a char
+		char ans = ansBox.getText(0, 1).toUpperCase().toCharArray()[0];
 		ansBox.clear();
+
 		if(!guess.getText().equals(ans)){
-			nn.correct(ans, results);
+			//nn.correct(ans, results);
+			//Convert the char to an int form (ASCII table).
+			int actual = ans - 65;
+			nn.correct(actual);
 		}
 		loadImage(null);
 	}
