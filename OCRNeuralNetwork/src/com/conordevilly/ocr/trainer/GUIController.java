@@ -23,7 +23,7 @@ public class GUIController {
 	@FXML private ImageView imageView;
 	@FXML private TextField ansBox;
 	@FXML private Text guess;
-	private HashMap<String, Float> results;
+	private HashMap<Character, Float> results;
 	
 	NeuralNetwork nn;
 	ObservableList<Result> resList;
@@ -31,7 +31,7 @@ public class GUIController {
 	public void init(NeuralNetwork network){
 		nn = network;
 		resList = resTable.getItems();
-		results = new HashMap<String, Float>();
+		results = new HashMap<Character, Float>();
 	}
 	
 	@FXML protected void openFileChooser(ActionEvent event){
@@ -48,7 +48,7 @@ public class GUIController {
 			Image img = new Image(imgList[imgListIterator].toURI().toString());
 			BufferedImage bufImg = SwingFXUtils.fromFXImage(img, null);
 			results.clear();
-			results = nn.process(bufImg);
+			results = nn.trainingProcess(bufImg);
 			imageView.setImage(img);
 			updateTable(results);
 			setGuess(nn.getGuess());
@@ -62,14 +62,14 @@ public class GUIController {
 		}
 	}
 	
-	@FXML protected void setGuess(String s){
-		guess.setText(s);
+	@FXML protected void setGuess(char s){
+		guess.setText(Character.toString(s));
 	}
 	
-	@FXML protected void updateTable(HashMap<String, Float> results){
+	@FXML protected void updateTable(HashMap<Character, Float> results){
 		resList.clear();
 		for(int i = 0; i < results.size(); i++){
-			String key = Character.toString((char) (i + 65));
+			char key = ((char) (i + 65));
 			float val = results.get(key);
 			resList.add(new Result(key, val));
 		}

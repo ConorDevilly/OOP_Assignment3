@@ -4,15 +4,15 @@ import java.util.HashMap;
 
 public class OutputNeuron extends Neuron{
 	private static final long serialVersionUID = -5626491854127149290L;
-	HashMap<String, Float> results;
+	HashMap<Character, Float> results;
 	private float max;
-	private String mostLikely;
+	private char mostLikely;
 
 	public OutputNeuron(int numInputs) {
 		super(numInputs, null);
-		results = new HashMap<String, Float>();
+		results = new HashMap<Character, Float>();
 		max = 0;
-		mostLikely = "";
+		mostLikely = 0;
 	}
 	
 	@Override
@@ -20,7 +20,8 @@ public class OutputNeuron extends Neuron{
 		max = 0;
 		for(int i = 0; i < inputs.size(); i++){
 			float input = inputs.get(i);
-			String letter = Character.toString((char) (i + 65));
+			//String letter = Character.toString((char) (i + 65));
+			char letter = (char) (i + 65);
 			results.put(letter, input);
 			if(input > max){
 				max = input;
@@ -29,11 +30,11 @@ public class OutputNeuron extends Neuron{
 		}
 	}
 	
-	public HashMap<String, Float> getRes(){
+	public HashMap<Character, Float> getRes(){
 		return results;
 	}
 	
-	public String getGuess(){
+	public char getGuess(){
 		return mostLikely;
 	}
 	

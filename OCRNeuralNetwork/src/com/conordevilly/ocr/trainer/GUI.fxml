@@ -17,7 +17,6 @@
 	    <Label text="Dir:"/>
 	    <TextField />
 	    <Button text="Select" onAction="#openFileChooser"/>
-	    <!--<Button text="Load Images" />-->
     </HBox>
 
     <TableView fx:id="resTable" GridPane.columnIndex="0" GridPane.rowIndex="1">

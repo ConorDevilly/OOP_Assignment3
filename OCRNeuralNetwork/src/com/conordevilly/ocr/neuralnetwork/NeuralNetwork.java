@@ -110,11 +110,32 @@ public class NeuralNetwork implements java.io.Serializable{
 		return similar;
 	}
 	
-	public HashMap<String, Float> process(BufferedImage input){
-		HashMap<String, Float> results = new HashMap<String, Float>();
-		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
-		clearInputs();
+	//Returns a string contained in an image
+	public String processMultiImage(BufferedImage input){
+		String result = "";
 		
+		ArrayList<BufferedImage> subImgs = ImageProcessor.extractIndivChar(input);
+		
+		for(BufferedImage bufImg : subImgs){
+			result += process(bufImg);
+		}
+		
+		return result;		
+	}
+	
+	public char process(BufferedImage input){
+		char ret = 0;
+		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
+		fireNeurons(numbers);
+
+		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
+		ret = out.getGuess();
+
+		return ret;
+	}
+
+	//Gives input to the input layer, then runs all layers sequentially
+	private void fireNeurons(ArrayList<Float> numbers){
 		for(int i = 0; i < inputLayer.size(); i++){
 			Neuron n = inputLayer.get(i);
 			try {
@@ -124,7 +145,6 @@ public class NeuralNetwork implements java.io.Serializable{
 				e.printStackTrace();
 			}
 		}
-		
 		for(Neuron n : hiddenLayer1){
 			try {
 				n.run();
@@ -132,19 +152,27 @@ public class NeuralNetwork implements java.io.Serializable{
 				e.printStackTrace();
 			}
 		}
-		
 		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
 		try {
 			out.process();
 		} catch (SizeMismatchException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public HashMap<Character, Float> trainingProcess(BufferedImage input){
+		HashMap<Character, Float> results = new HashMap<Character, Float>();
+		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
+		clearInputs();
 		
+		fireNeurons(numbers);
+		
+		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
 		results = out.getRes();
 		return results;		
 	}
 	
-	public String getGuess(){
+	public char getGuess(){
 		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
 		return out.getGuess();
 	}

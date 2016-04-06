@@ -7,8 +7,8 @@ public class Result {
 	private final SimpleStringProperty key;
 	private final SimpleFloatProperty val;
 	
-	public Result(@NamedArg("key") String k, @NamedArg("val") float v){
-		key = new SimpleStringProperty(k);
+	public Result(@NamedArg("key") char k, @NamedArg("val") float v){
+		key = new SimpleStringProperty(Character.toString(k));
 		val = new SimpleFloatProperty(v); 
 	}
 	

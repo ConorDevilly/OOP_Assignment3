@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.collections.*?>
+
+
+<GridPane fx:controller="com.conordevilly.ocr.wordGuesser.MainController" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+
+	<HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+		<Label text="Dir:"/>
+		<TextField />
+		<Button text="Select" onAction="#openFileChooser"/>
+	</HBox>
+
+	<HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+		<ImageView fx:id="imageView" fitWidth="100" fitHeight="100">
+			<image>
+			</image>
+		</ImageView>
+	</HBox>
+
+	<HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2">
+		<Label text="Guess: " />
+		<Text fx:id="guess"/>
+	</HBox>
+</GridPane>
