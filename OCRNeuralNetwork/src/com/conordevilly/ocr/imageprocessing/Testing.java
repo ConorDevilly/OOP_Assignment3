@@ -14,10 +14,10 @@ public class Testing {
 	Testing(){
 		try {
 			BufferedImage input = ImageIO.read(new File("input.png"));
+			//Extract entire image (i.e: remove whitespace at margins)
 			input = ImageProcessor.extractChar(input);
-			//input = ImageProcessor.scale(input, 250, 250);
-			//ImageIO.write(input, "png", new File("output.png"));
 			ArrayList<BufferedImage> listChars = ImageProcessor.extractIndivChar(input);
+
 			for(int i = 0; i < listChars.size(); i++){
 				ImageIO.write(listChars.get(i), "png", new File(i + ".png"));
 			}

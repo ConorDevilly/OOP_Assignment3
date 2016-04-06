@@ -113,11 +113,14 @@ public class NeuralNetwork implements java.io.Serializable{
 	//Returns a string contained in an image
 	public String processMultiImage(BufferedImage input){
 		String result = "";
-		
+
+		//We must remove whitespace from the margins before we can extract individual characters
+		input = ImageProcessor.extractChar(input);
 		ArrayList<BufferedImage> subImgs = ImageProcessor.extractIndivChar(input);
 		
 		for(BufferedImage bufImg : subImgs){
-			result += process(bufImg);
+			clearInputs();
+			result += this.process(bufImg);
 		}
 		
 		return result;		
@@ -126,6 +129,7 @@ public class NeuralNetwork implements java.io.Serializable{
 	public char process(BufferedImage input){
 		char ret = 0;
 		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
+		clearInputs();
 		fireNeurons(numbers);
 
 		OutputNeuron out = (OutputNeuron) outputLayer.get(0);

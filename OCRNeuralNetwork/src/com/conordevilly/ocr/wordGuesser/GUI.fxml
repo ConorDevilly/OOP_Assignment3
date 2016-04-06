@@ -11,22 +11,15 @@
 
 
 <GridPane fx:controller="com.conordevilly.ocr.wordGuesser.MainController" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+	<Label text="Dir:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+	<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+	<Button text="Select" onAction="#openFileChooser" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
 
-	<HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
-		<Label text="Dir:"/>
-		<TextField />
-		<Button text="Select" onAction="#openFileChooser"/>
-	</HBox>
+	<ImageView fx:id="imageView" fitWidth="160" fitHeight="90" GridPane.rowIndex="1" GridPane.columnIndex="1">
+		<image>
+		</image>
+	</ImageView>
 
-	<HBox GridPane.columnIndex="0" GridPane.rowIndex="1">
-		<ImageView fx:id="imageView" fitWidth="100" fitHeight="100">
-			<image>
-			</image>
-		</ImageView>
-	</HBox>
-
-	<HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="2">
-		<Label text="Guess: " />
-		<Text fx:id="guess"/>
-	</HBox>
+	<Label text="Guess: " GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+	<Text fx:id="guess" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 </GridPane>

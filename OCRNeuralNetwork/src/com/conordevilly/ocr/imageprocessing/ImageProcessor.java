@@ -28,10 +28,18 @@ public class ImageProcessor {
 	}
 	
 	//TODO: Scale image before running this
+	/*
+	 * Character extraction algorithm:
+	 * Scan each column.
+	 * If a pixel exists in a column, set pixFound = true
+	 * Once a row has been scanned, set prev = pixFound
+	 * If a pixel had been found, but none was found in the row before that, it means that an entire character has been scanned
+	 * If that is the case, create a subimage of the character scanned and add it to the list
+	 */
 	public static ArrayList<BufferedImage> extractIndivChar(BufferedImage input){
 		ArrayList<BufferedImage> ret = new ArrayList<BufferedImage>();
 		boolean pixFound;
-		boolean prev = false;
+		boolean prev = true; //Images should have marginal whitespace removed => first col pixFound == true
 		int lastX = 0;
 
 		for(int i = 0; i < input.getWidth(); i++){
@@ -42,12 +50,15 @@ public class ImageProcessor {
 			}
 
 			if((pixFound == true) && (pixFound != prev)){
-				ret.add(input.getSubimage(lastX, 0, i, input.getHeight()));
+				ret.add(input.getSubimage(lastX, 0, (i - lastX), input.getHeight()));
 				lastX = i;
 			}
 
 			prev = pixFound;
 		}
+		
+		//Add the remaining character to the list
+		ret.add(input.getSubimage(lastX, 0, (input.getWidth() - lastX), input.getHeight()));
 		
 		return ret;
 		

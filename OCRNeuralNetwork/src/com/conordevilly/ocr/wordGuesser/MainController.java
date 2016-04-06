@@ -11,10 +11,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 public class MainController {
-	@FXML private TextField guess;
+	@FXML private Text guess;
 	@FXML private ImageView imageView;
 	NeuralNetwork nn;
 	
@@ -30,7 +31,7 @@ public class MainController {
 	
 	@FXML protected void displayImage(File f){
 		try{
-			Image img = new Image(f.getPath());
+			Image img = new Image(f.toURI().toString());
 			BufferedImage bufImg = SwingFXUtils.fromFXImage(img, null);
 			String result = nn.processMultiImage(bufImg);
 			setGuess(result);

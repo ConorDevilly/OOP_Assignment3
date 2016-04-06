@@ -27,5 +27,4 @@ public class WordGuesser extends Application{
 		stage.setScene(scene);
 		stage.show();
 	}
-
 }
