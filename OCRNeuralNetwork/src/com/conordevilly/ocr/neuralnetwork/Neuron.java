@@ -116,12 +116,15 @@ public abstract class Neuron implements java.io.Serializable{
 				}else{
 					weight += -(Math.log(weight) * (1f / 10f));
 				}
+				weight = (weight >= 1) ? 1 : weight;
 			}else if(input == 0){
 				if(weight == 1){
 					weight -= 0.5f;
 				}else{
 					weight -= -(Math.log(1 - weight) * (1f / 10f));
 				}
+				//Check weight != 0
+				weight = (weight <= 0) ? 0 : weight;
 			}else{
 				throw new InvalidInputException();
 			}
