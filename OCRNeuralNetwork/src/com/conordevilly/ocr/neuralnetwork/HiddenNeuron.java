@@ -9,6 +9,7 @@ public class HiddenNeuron extends Neuron{
 		super(numInputs, nextLayer);
 	}
 	
+	/*
 	@Override
 	public float calcOutputDif(int index){
 		float ret = 0;
@@ -23,6 +24,26 @@ public class HiddenNeuron extends Neuron{
 				e.printStackTrace();
 			}
 		}
+		return ret;
+	}
+	*/
+	
+	@Override
+	public float calcOutputDif(int index){
+		float ret = 0;
+		float val = inputs.get(index);
+		
+		//If the value is a one, this input "stimulates" the neuron
+		if(val == 1){
+			ret += weights.get(index);
+		}else if(val != 0){
+			try {
+				throw new InvalidInputException();
+			} catch (InvalidInputException e) {
+				e.printStackTrace();
+			}
+		}
+
 		return ret;
 	}
 }
