@@ -133,6 +133,8 @@ public abstract class Neuron implements java.io.Serializable{
 			
 			weights.set(i, weight);
 		}
+		//DEBUG
+		System.out.println(this.toString());
 	}
 	
 	//DEBUG

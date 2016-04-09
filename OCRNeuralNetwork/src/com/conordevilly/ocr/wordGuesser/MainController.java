@@ -57,10 +57,10 @@ public class MainController {
 			char g = guess.getText().charAt(i);
 			char actual = ans[i];
 
-			//if(g != actual){
+			if(g != actual){
 				System.out.println("Guessed: " + g + "\tCorrected: " + actual);
 				nn.correct((actual - 65));
-			//}
+			}
 		}
 		
 		refresh(null);

@@ -257,6 +257,7 @@ public class NeuralNetwork implements java.io.Serializable{
 	}
 	
 	//Write the hidden & outer layers
+	//TODO: Remove?
 	public void saveNeurons(){
 		//Hidden layer
 		for(int i = 0; i < hiddenLayer1.size(); i++){
