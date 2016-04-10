@@ -1,0 +1,179 @@
+Corrections:
+
+Activation Summation Technique:
+
+10/04: Typed Chars (26 x 3). It1
+
+Correct	%	Guess	%
+J		I
+C		G
+O		D
+U	28.63	B	29.5
+C	28.46	G	31	NC
+F	25.89	P	28.5
+L	30.45	E	33.5
+H	39.46	N	42
+C	27.31	G	30
+U	33.73	N	36
+F	27.04	E	30.5
+H	37.83	B	42
+H	38.65	N	42
+Y	31.97	I	33
+U	34.83	N	36
+M	28.4	N	29
+M	33.81	B	35.5
+F	30.32	E	38.5
+T	30.14	I	32
+X	37.82	I	40
+T	28	I	28
+T	28	I	28
+
+TOTAL:	22 Wrong (28%)
+
+It2:
+
+J	40.14	I	47
+C	30.87	G	32
+O	42.09	D	43
+U	28.51	B	29.5	D
+C	28.86	G	31	U
+F	26.44	P	28.5	U
+L	31.96	E	33.5	U
+H	39.63	N	42	U
+C	28.08	G	30	U
+U	33.85	N	36	U
+F	27.52	E	30.5	U
+H	37.63	B	42	D
+H	38.75	N	42	U
+Y	32.75	I	33	U
+U	34.93	N	36	U
+M	28.76	N	29	U
+M	34.43	B	35.5	U
+F	30.61	E	38.5	U
+T	30.08	I	32	D
+X	38.89	I	40	U
+T	28	I	28	E
+T	28	I	28	E
+
+TOTAL: 22 Wrong (28.2%)	(0% Improvement)
+
+It3:(Saved before)
+
+J	41.12	I	47	U
+L	23.46	E	24
+C	31.33	G	32	U
+U	28.46	B	29.5	D
+C	29.52	G	31	U
+F	26.80	P	28.5	U
+L	31.05	E	33.5	D
+H	39.72	N	42	U
+C	28.59	G	30	D
+U	33.9	N	36	U
+F	27.83	E	30.5	U
+H	37.54	B	42	D
+H	38.80	N	42	U
+U	34.98	N	36	U
+F	30.83	E	38.5	U
+T	30.05	I	32	D
+L	29.28	E	29.5
+X	39.78	I	40	U
+T	28	I	28	E
+T	28	I	28	E
+
+TOTAL: 20 Wrong	(25.6)	(9% Improvement)
+
+It4:
+
+J	41.95	I	47	U
+C	31.68	G	32	U
+U	28.43	B	29.5	D
+C	29.96	G	31	U
+F	27.04	P	28.5	U
+L	31.84	E	33.5	U
+H	39.76	N	42	U
+C	28.93	G	30	U
+U	33.93	N	36	U
+F	28.04	E	30.5	U
+H	37.49	B	42	D
+H	38.83	B	42	U
+U	35	N	36	U
+F	30.99	E	38.5	U
+T	30.04	I	32	D
+T	28	I	28	E
+T	28	I	28	E
+
+TOTAL: 17 Wrong (21.8%)	(14.8% Improvement)
+
+It5:
+
+J	42.67	I	47	U
+L	23.6	E	24
+C	31.93	G	32	U
+U	28.41	B	29.5	D
+C	30.25	G	31	U
+F	27.2	P	28.5	U
+L	30.98	E	33.5	D
+H	39.78	N	42	U
+C	29.17	G	30	U
+U	33.94	N	36	U
+F	28.19	E	30.5	U
+H	37.47	B	42	D
+H	38.84	N	42	U
+U	35.01	N	36	U
+F	31.11	E	38.5	U
+T	30.04	I	32	E
+L	29.44	E	29.5
+T	28	I	28	E
+T	28	I	28	E
+
+TOTAL: 19 Wrong (24.4%)	(-11.9% Improvement)
+
+It6: (Saved before)(Switched to alphabetical)
+
+C:	C: 29.39	G: 30
+	C: 31.69	G: 32
+	C: 30.36	G: 31
+F:	F: 28.48	E: 30.5
+	F: 32.49	E: 38.5
+	F: 26.70	P: 28.5
+H:	H: 39.79	N: 42
+	H: 37.46	B: 42
+	H: 38.84	N: 42
+J:	J: X		I: X		NC
+L:	L: 31.80	E: 33.5
+T:	T: 28.00	I: 28.0
+	T: 29.79	I: 32
+	T: 28.00	I: 28.00
+U:	U: 35.90	N: 36.00
+	U: 27.87	B: 29.5
+	U: 34.46	N: 36.0
+
+Problem chars: C, F, H, T, U
+TOTAL: 17 Wrong (21.8%)	(11% Improvement)
+
+It7:
+
+C:	C: 29.46	G: 30		U
+	C: 30.55	G: 31		U
+F:	F: 28.44	E: 30.5		D
+	F: 31.88	E: 38.5		D
+	F: 27.122	P: 28.5		U
+H:	H: 39.79	N: 42		E
+	H: 37.46	B: 42		E
+	H: 38.85	N: 42		U
+J:	J: 43.28	I: 47		
+L:	L: 23.66	E: 24
+	L: 30.94	E: 33.5		D
+T:	T: 28.00	I: 28.0		E
+	T: 29.91	I: 32		U
+	T: 28.00	I: 28.00	E
+U:	U: 35.43	N: 36.00	D
+	U: 28.15	B: 29.5		U
+	U: 34.20	N: 36.0		D
+
+TOTAL: 17 Wrong (21.8%) (0% Improvement)
+
+NC = Not Corrected
+U = Up (More accurate than previous)
+D = Down (Less accurate than previous)
+E = Even (Same as previous)
