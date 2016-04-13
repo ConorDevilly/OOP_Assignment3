@@ -1,0 +1,7 @@
+{
+    "tutorials": {
+        "id": "Hello",
+        "topic": "Testing REST",
+        "description": "Testing web service for OCR application"
+    }
+}
