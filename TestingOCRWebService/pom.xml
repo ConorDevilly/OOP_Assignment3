@@ -4,7 +4,6 @@
 	<groupId>TestingREST</groupId>
 	<artifactId>TestingREST</artifactId>
 	<version>0.0.1</version>
-	<packaging>war</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -43,4 +42,5 @@
 			<version>20090211</version>
 		</dependency>
 	</dependencies>
+	<packaging>war</packaging>
 </project>
