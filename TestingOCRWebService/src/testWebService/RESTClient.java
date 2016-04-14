@@ -13,9 +13,13 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -24,36 +28,26 @@ import com.sun.jersey.core.util.Base64;
 public class RESTClient {
 	public static void main(String[] args) {
 		RESTClient cli = new RESTClient();
-		cli.sendJSONFile(new File("src/Test/test.png"));
-	}
-	
-	private void sendJSONFile(File in){
-		JSONObject json = new JSONObject();
-		
-		try{
-			String fileData = convFileToString(in);
-			json.put("fileData", fileData);
-
-			URL url = new URL("http://localhost:8080/TestingOCRWebService/api/ocr");
-			URLConnection connection = url.openConnection();
-			connection.setDoOutput(true);
-			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setConnectTimeout(5000);
-			connection.setReadTimeout(5000);
-
-			OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-			out.write(json.toString());
-			out.close();
-
-			BufferedReader response = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String line;
-			while ((line = response.readLine()) != null) {
-				System.out.println(line);
-			}
-			response.close();
-		}catch(Exception e){
+		try {
+			cli.sendJSONFile(new File("src/Test/test.png"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void sendJSONFile(File toSend) throws IOException, JSONException{
+		JSONObject json = new JSONObject();
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource("my_rest_address_path");
+
+        JSONObject data_file = new JSONObject();
+        data_file.put("fileData", convFileToString(toSend));
+
+        ClientResponse client_response = service.accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, data_file);
+        System.out.println("Status: "+ client_response.getStatus());
+
+        client.destroy();
 	}
 	
 	//Converts a file to a Base64 encoded string
