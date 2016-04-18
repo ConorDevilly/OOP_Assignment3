@@ -18,31 +18,24 @@ import java.net.URLConnection;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-public class OCRRESTClient extends AsyncTask<File, Object, String>{
-	String url;
+public class OCRRESTClient{
+	String address;
 
-	public OCRRESTClient(String url){
-		this.url = url;
+	public OCRRESTClient(String address){
+		this.address = address;
 	}
 	
 	public String sendJSONFile(File toSend){
-		return doInBackground(toSend);
-	}
-	
-	@Override
-	protected String doInBackground(File... params){
-		File toSend = (File) params[0];
 		String ret = "";
 		String encoded;
 		try {
 			encoded = convFileToString(toSend);
 			JSONObject json = new JSONObject();
 			json.put("fileData", encoded);
-			URL url = new URL("http://localhost:8080/CrunchifyTutorials/api/crunchifyService");
+			URL url = new URL(address + "/api/ocr");
 			URLConnection connection = url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestProperty("Content-Type", "application/json");
@@ -58,37 +51,14 @@ public class OCRRESTClient extends AsyncTask<File, Object, String>{
 				ret += line;
 			}
 			in.close();
-		} catch (IOException e) {
-			Log.e("OCR", e.getMessage());
-		} catch (JSONException e) {
-			Log.e("OCR", e.getMessage());
+		}/* catch (IOException e) {
+			Log.e("OCR: IOException", e.getMessage());
+		}*/ catch (JSONException e) {
+			Log.e("OCR: JSONException", e.getMessage());
 		}
 
 		return ret;
 	}
-	/*
-	public String sendJSONFile(File toSend) throws IOException, JSONException{
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(url + "/api/ocr");
-
-        Log.d("OCR", "Set target");
-
-        JSONObject data_file = new JSONObject();
-        data_file.put("fileData", convFileToString(toSend));
-
-        Log.d("OCR", "Create Json");
-
-        Response res = target.request(MediaType.APPLICATION_JSON).post(Entity.entity(data_file, MediaType.APPLICATION_JSON));
-
-        Log.d("OCR", "Got resp");
-
-        String guess = (String) res.getEntity();
-        client.close();
-
-        return guess;
-
-        //System.out.println("Status: "+ client_response.getStatus());
-	}*/
 	
 	//Converts a file to a Base64 encoded string
 	private String convFileToString(File in) throws IOException{

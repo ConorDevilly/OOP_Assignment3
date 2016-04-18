@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 
@@ -19,7 +20,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity{
 	
-	private final String url = "192.168.1.124";
+	private final String url = "http://192.168.1.124:8080/TestingREST";
 	Context context;
 	int duration;
 
@@ -44,30 +45,16 @@ public class MainActivity extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 		//Bitmap img = (Bitmap) data.getExtras().get("data");
 		//File toSend = new File("toSend");
-		Toast t;
-		t = Toast.makeText(context, "Got Res", duration);
-		t.show();
 		Bitmap img = (Bitmap) data.getExtras().get("data");
-		t = Toast.makeText(context, "Got File", duration);
-		t.show();
 		Log.i("OCRCamera", "Got data");
 		
 		try {
-			FileOutputStream writer = openFileOutput("toSend", MODE_PRIVATE);
+			File toSend = File.createTempFile("OCR", "png");
+			FileOutputStream writer = new FileOutputStream(toSend);
 			img.compress(Bitmap.CompressFormat.PNG, 80, writer);
 			writer.close();
-			File toSend = new File("toSend");
 
-			OCRRESTClient cli = new OCRRESTClient(url);
-			String thisIsFucked = cli.sendJSONFile(toSend);
-
-			Toast r = Toast.makeText(context, thisIsFucked, duration);
-			r.show();
-			/*
-			String guess = cli.sendJSONFile(toSend);
-			Toast r = Toast.makeText(context, guess, duration);
-			r.show();
-			*/
+			new RestTask(url, MainActivity.this).execute(toSend);
 		} catch (FileNotFoundException e) {
 			Toast r = Toast.makeText(context, "File fucked", duration);
 			r.show();
