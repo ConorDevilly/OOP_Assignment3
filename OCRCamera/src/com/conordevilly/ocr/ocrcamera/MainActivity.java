@@ -1,5 +1,6 @@
 package com.conordevilly.ocr.ocrcamera;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,27 +45,14 @@ public class MainActivity extends Activity{
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		super.onActivityResult(requestCode, resultCode, data);
-		//Bitmap img = (Bitmap) data.getExtras().get("data");
-		//File toSend = new File("toSend");
-		Bitmap img = (Bitmap) data.getExtras().get("data");
-		Log.i("OCRCamera", "Got data");
 		
-		try {
-			File toSend = File.createTempFile("OCR", "png");
-			FileOutputStream writer = new FileOutputStream(toSend);
-			img.compress(Bitmap.CompressFormat.PNG, 80, writer);
-			writer.close();
+		Bitmap img = (Bitmap) data.getExtras().get("data");
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+		img.compress(Bitmap.CompressFormat.PNG , 100, baos); //bm is the bitmap object   
+		byte[] bytes = baos.toByteArray(); 
+		String encoded = new String(Base64.encode(bytes, Base64.NO_WRAP));
 
-			new RestTask(url, MainActivity.this).execute(toSend);
-		} catch (FileNotFoundException e) {
-			Toast r = Toast.makeText(context, "File fucked", duration);
-			r.show();
-			e.printStackTrace();
-		} catch (IOException e) {
-			Toast r = Toast.makeText(context, "Writer not lcose", duration);
-			r.show();
-			e.printStackTrace();
-		}
+		new RestTask(url, MainActivity.this).execute(encoded);
 	}
 
 	@Override

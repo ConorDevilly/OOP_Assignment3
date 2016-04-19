@@ -5,6 +5,7 @@ import com.conordevilly.ocr.imageprocessing.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,9 +115,11 @@ public class NeuralNetwork implements java.io.Serializable{
 	public String processMultiImage(BufferedImage input){
 		String result = "";
 
+		input = ImageProcessor.binarise(input);
 		//We must remove whitespace from the margins before we can extract individual characters
 		input = ImageProcessor.extractChar(input);
 		ArrayList<BufferedImage> subImgs = ImageProcessor.extractIndivChar(input);
+		
 		
 		for(BufferedImage bufImg : subImgs){
 			clearInputs();
@@ -232,14 +235,17 @@ public class NeuralNetwork implements java.io.Serializable{
 			HiddenNeuron n = new HiddenNeuron(numInputs, outputLayer);
 			ArrayList<Float> initVals = convIntListToFloatList(references.get(Character.toString((char) (i+65))));
 
+			//TODO: Is any of this crap necessary?
 			for(int j = 0; j < numInputs; j++){
 				try {
-					n.addWeight(initVals.get(j));
-
-					//DEBUG
-					if(i == 0){
-						//System.out.println(n.toString());
+					if(initVals.get(j) == 1){
+						//n.addWeight(0.75f);
+						n.addWeight(0.5f);
+					}else{
+						//n.addWeight(0);
+						n.addWeight(0.5f);
 					}
+					//n.addWeight(initVals.get(j));
 				} catch (TooManyInputsException e) {
 					e.printStackTrace();
 				}

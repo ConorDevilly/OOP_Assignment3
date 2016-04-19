@@ -28,15 +28,16 @@ public class OCRRESTClient{
 		this.address = address;
 	}
 	
-	public String sendJSONFile(File toSend){
+	public String send(String toSend){
 		String ret = "";
-		String encoded;
+		URLConnection connection = null;
+		JSONObject json = null;
 		try {
-			encoded = convFileToString(toSend);
-			JSONObject json = new JSONObject();
-			json.put("fileData", encoded);
+			json = new JSONObject();
+			json.put("fileData", toSend);
+			Log.i("OCR", json.toString());
 			URL url = new URL(address + "/api/ocr");
-			URLConnection connection = url.openConnection();
+			connection = url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setConnectTimeout(5000);
@@ -44,37 +45,28 @@ public class OCRRESTClient{
 			OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
 			out.write(json.toString());
 			out.close();
+		}catch(IOException e){
+			Log.e("OCR IOException", e.getMessage());
+		} catch (JSONException e) {
+			Log.e("OCR JSONException", e.getMessage());
+		}
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		}catch(IOException e){
+			Log.e("OCR IOException", "Getting response");
+		}
+		try{
 			String line;
 			while((line = in.readLine()) != null){
 				ret += line;
 			}
 			in.close();
-		}/* catch (IOException e) {
-			Log.e("OCR: IOException", e.getMessage());
-		}*/ catch (JSONException e) {
-			Log.e("OCR: JSONException", e.getMessage());
+		} catch(IOException e) {
+			Log.e("OCR: IOException", "Reading Response"); 
 		}
 
 		return ret;
 	}
-	
-	//Converts a file to a Base64 encoded string
-	private String convFileToString(File in) throws IOException{
-		int size = (int) in.length();
-		byte[] bytes = new byte[size];
-		
-		try {
-		    BufferedInputStream buf = new BufferedInputStream(new FileInputStream(in));
-		    buf.read(bytes, 0, bytes.length);
-		    buf.close();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}	
-		
-		String ret = new String(Base64.encode(bytes, Base64.DEFAULT));
-		return ret;
-	}
-
 }

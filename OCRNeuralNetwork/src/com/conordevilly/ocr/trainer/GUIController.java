@@ -38,7 +38,8 @@ public class GUIController {
 		DirectoryChooser dirChooser = new DirectoryChooser();
 		File imgDir = dirChooser.showDialog(null);
 		imgList = imgDir.listFiles();
-		//Arrays.sort(imgList);
+		//DEBUG
+		Arrays.sort(imgList);
 		imgListIterator = 0;
 		loadImage(null);
 	}

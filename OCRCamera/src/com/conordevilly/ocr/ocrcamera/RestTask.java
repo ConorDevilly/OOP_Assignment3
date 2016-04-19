@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class RestTask extends AsyncTask<File, Void, String>{
+public class RestTask extends AsyncTask<String, Void, String>{
 	String url;
 	Context context;
 
@@ -19,10 +19,10 @@ public class RestTask extends AsyncTask<File, Void, String>{
 	}
 	
 	@Override
-	protected String doInBackground(File... params) {
+	protected String doInBackground(String... params) {
 		OCRRESTClient cli = new OCRRESTClient(url);
-		File toSend = params[0];
-		String guess = cli.sendJSONFile(toSend);
+		String toSend = params[0];
+		String guess = cli.send(toSend);
 		Log.i("OCR Guess:", guess);
 		return guess;
 	}

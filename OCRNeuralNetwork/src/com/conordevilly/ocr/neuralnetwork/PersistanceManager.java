@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
@@ -22,19 +23,22 @@ public class PersistanceManager {
 		return n;
 	}
 	
-	public static NeuralNetwork readNN(File f){
+	public static NeuralNetwork readNN(File f) throws FileNotFoundException{
 		NeuralNetwork nn = null;
-		try{
-			FileInputStream in = new FileInputStream(f);
+		FileInputStream in = new FileInputStream(f);
+
+		try {
 			ObjectInputStream reader = new ObjectInputStream(in);
 			nn = (NeuralNetwork) reader.readObject();
 			reader.close();
 			in.close();
-		}catch(Exception e){
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+
 		return nn;
-		
 	}
 	
 	public static void write(NeuralNetwork nn){

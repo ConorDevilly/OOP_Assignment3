@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
+import java.util.Base64;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -16,7 +16,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.conordevilly.ocr.neuralnetwork.*;
-import com.sun.jersey.core.util.Base64;
  
 @Path("/")
 public class RestService {
@@ -32,31 +30,61 @@ public class RestService {
 	ServletContext context;
 	NeuralNetwork nn;
 	
-	public RestService(){
-		/*
-		NeuralNetwork nn = PersistanceManager.readNN(new File("/nn.data"));
+	@POST
+	@Path("/ocr")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response process(InputStream incomingData) {
 		if(nn == null){
-			nn = new NeuralNetwork(10, 26);
+			nn = PersistanceManager.readNN(new File("nn.data"));
 		}
-		*/
+		StringBuilder respBuilder = new StringBuilder();
+		String encodedData = null;
+		String guess = null;
+		File data = null;
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
+			String line = null;
+			while ((line = in.readLine()) != null) {
+				respBuilder.append(line);
+			}
+			JSONObject json = new JSONObject(respBuilder.toString());
+			encodedData = (String) json.get("fileData");
+			data = convStringToFile(encodedData);
+			BufferedImage input = ImageIO.read(data);
+			FileOutputStream out = new FileOutputStream(new File("camPic"));
+			ImageIO.write(input, "png", out);
+			guess = nn.processMultiImage(input);
+		}catch(IOException e){
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return Response.status(200).entity(guess).build();
 	}
 	
+	/*
 	@POST
 	@Path("/ocr")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response process(JSONObject inputJSON) throws JSONException, IOException{
+		System.out.println("Got request");
 		String fileData = (String) inputJSON.get("fileData");
+		System.out.println("Data: " + fileData);
 		File fileIn = convStringToFile(fileData);
 		BufferedImage imgIn = ImageIO.read(fileIn);
 		String guess = nn.processMultiImage(imgIn);
+		System.out.println("Guess: " + guess);
 		
 		return Response.status(200).entity(guess).build();
 	}
+	*/
 	
 	//Converts a string of encoded data to a file
 	private File convStringToFile(String encodedData) throws IOException{
-		File ret = new File("/tmp.jpg");
-		byte[] rawData = Base64.decode(encodedData);
+		File ret = new File("tmp");
+		//byte[] rawData = Base64.decode(encodedData);
+		byte[] rawData = Base64.getDecoder().decode(encodedData);
 
 		FileOutputStream writer = new FileOutputStream(ret);
 		writer.write(rawData);
@@ -69,7 +97,7 @@ public class RestService {
 	@Path("/test")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response testREST() {
-		String result = "Hello World!";
+		String result = "Hello World - Why are you bothering me?";
 		return Response.status(200).entity(result).build();
 	}
 }
