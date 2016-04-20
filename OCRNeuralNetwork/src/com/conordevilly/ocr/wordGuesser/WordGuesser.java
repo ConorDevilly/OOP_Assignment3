@@ -11,6 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/*
+ * A GUI for letter the user enter a picture of a word & guessing the word
+ */
 public class WordGuesser extends Application{
 	public static void main(String args[]){
 		launch(args);
