@@ -3,7 +3,7 @@ package com.conordevilly.ocr.neuralnetwork;
 import java.util.ArrayList;
 
 /*
- * Base Neuron calass
+ * Base Neuron class
  */
 public class Neuron implements java.io.Serializable{
 	private static final long serialVersionUID = -2651544557240828084L;
@@ -100,32 +100,31 @@ public class Neuron implements java.io.Serializable{
 		
 		//Make the output = sum of all inputs once their weights are factored in
 		for(int i = 0; i < inputs.size(); i++){
-			output += equivInput(i);
+			output += calcInput(i);
 		}
 		output *= bias;
 	}
 	
 	//Sets what an input should be once its weight is factored into account
-	protected float equivInput(int index){
+	protected float calcInput(int index){
 		return (inputs.get(index) * weights.get(index));
 	}
 	
-	//Broken. Possible fix is to modify the summation function to only increase chance iff positive value. 
-	//I.e: A black pix "activates" assoc. neuron
-	//TODO: THIS ONE IS RIGHT
+	//Corrects the Neuron
 	public void correct() throws InvalidInputException{
 		float weight;
 		float input;
+		//Go through each weight
 		for(int i = 0; i < weights.size(); i++){
 			weight = weights.get(i);
 			input = inputs.get(i);
 			
+			//The weight must be modified differently depending on whether or not the input is a postitve value
 			if(input == 1){
 				//We have special cases for when the weight = 1 or 0 as computing ln1 or ln0 leads to errors
 				if(weight == 0){
 					weight += 0.5f;
 				}else{
-					//weight += -(Math.log(weight) * (1f / 10f));
 					weight += Math.log(weight) * -0.1;
 				}
 				weight = (weight >= 1) ? 1 : weight;
@@ -133,7 +132,6 @@ public class Neuron implements java.io.Serializable{
 				if(weight == 1){
 					weight -= 0.5f;
 				}else{
-					//weight -= -(Math.log(1 - weight) * (1f / 10f));
 					weight -= Math.log(1 - weight) * -0.1;
 				}
 				//Check weight != 0
@@ -141,105 +139,7 @@ public class Neuron implements java.io.Serializable{
 			}else{
 				throw new InvalidInputException();
 			}
-			
 			weights.set(i, weight);
-		}
-	}
-	
-	//DEBUG
-	public void correct(ArrayList<Float> corrections) throws SizeMismatchException, InvalidInputException{
-		if(corrections.size() != weights.size()){
-			throw new SizeMismatchException(weights.size(), corrections.size());
-		}
-		
-		for(int i = 0; i < corrections.size(); i++){
-			float correction = corrections.get(i);
-			float weight = weights.get(i);
-			
-			if(correction == 1){
-				if(weight == 0){
-					weight += 0.5f;
-				}else{
-					weight += -(Math.log(weight) * (1f / 10f));
-				}
-			}else if(correction == 0){
-				if(weight == 1){
-					weight -= 0.5f;
-				}else{
-					weight -= -(Math.log(1 - weight) * (1f / 10f));
-				}
-			}else{
-				throw new InvalidInputException();
-			}
-		}
-	}
-	
-	//DEBUG
-	public void correct(float actual, float output){
-		//Need some shite to differentiate weight
-		float weightChn = output- actual;
-		weightChn /= 100f;
-		for(int i = 0; i < weights.size(); i++){
-			float correctWeight = weightChn + weights.get(i);
-			correctWeight = (correctWeight >= 1.0) ? 1 : correctWeight;
-			correctWeight = (correctWeight <= 0) ? 0 : correctWeight;
-			weights.set(i, correctWeight);
-		}
-	}
-
-	//General rule for correcting weights
-	public void correctWeights(ArrayList<Float> corrections) throws SizeMismatchException, InvalidInputException{
-		if(arrSizeMatch(weights, corrections)){
-			for(int i = 0; i < corrections.size(); i++){
-				/*
-				 * x : 1	y += (ln(y) * (1/-10))	(y == 0) ? y += 0.5
-				 * x : 0	y -= (ln(10y) / 10)		(y < 1) ? y -= y/2
-				 * 
-				 * x : 1	(y == 0)	? y += 0.5 	: y += (ln(y) * (1/-10))
-				 * x : 0	(y < 1) 	? y -= y/2	: y -= (ln(10y) / 10)
-				 */
-				float correct = corrections.get(i);
-				float weight = weights.get(i);
-				
-				/*
-				 * Forumulae for the learning gradient:
-				 * 
-				 * x : 1 => {y : 0  => y += 0.5
-				 * 			{y !: 0 => y -= ln(y) * 1/10
-				 * 
-				 * x : 0 => {y : 1  => y -= 0.5
-				 * 			{y !: 1 => y += ln(1 - y) * 1/10
-				 * 
-				 * Where: 	x = Correct value
-				 * 			y = Current Weight
-				 */
-				
-				if(correct == 1){
-					//Trying to get ln0 is a calculation error, hence we handle it manually
-					if(weight == 0){
-						weight += 0.5;
-					}else{
-						weight -= (Math.log(weight) * (1f / 10f));
-					}
-				}else if(correct == 0){
-					if(weight == 1){
-						weight -= 0.5;
-					}else{
-						weight += (Math.log(1 - weight) * (1f / 10f));
-					}
-				}else{
-					throw new InvalidInputException();
-				}
-				
-				weights.set(i, weight);
-				
-				/*
-				float dif = corrections.get(i) - weights.get(i);
-				weights.set(i, weights.get(i) + dif);
-				*/
-			}
-		}else{
-			throw new SizeMismatchException(weights.size(), corrections.size());
 		}
 	}
 	

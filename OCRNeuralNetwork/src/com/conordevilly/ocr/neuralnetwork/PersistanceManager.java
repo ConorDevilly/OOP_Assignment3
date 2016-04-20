@@ -41,9 +41,9 @@ public class PersistanceManager {
 		return nn;
 	}
 	
-	public static void write(NeuralNetwork nn){
+	public static void writeNN(NeuralNetwork nn, File fout){
 		try{
-			FileOutputStream out = new FileOutputStream(new File("src/neurons/nn.data"));
+			FileOutputStream out = new FileOutputStream(fout);
 			ObjectOutputStream writer = new ObjectOutputStream(out);
 			writer.writeObject(nn);
 			writer.close();

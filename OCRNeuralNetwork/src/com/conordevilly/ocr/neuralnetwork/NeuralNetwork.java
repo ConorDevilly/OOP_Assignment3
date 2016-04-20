@@ -2,16 +2,16 @@ package com.conordevilly.ocr.neuralnetwork;
 
 import com.conordevilly.ocr.imageprocessing.*;
 
-
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
-
+/*
+ * Neural Network Class
+ * Creates a Neural Network
+ * Requires the number of possible outputs to be known
+ */
 public class NeuralNetwork implements java.io.Serializable{
 	
 	private static final long serialVersionUID = -5086224275711465547L;
@@ -22,16 +22,15 @@ public class NeuralNetwork implements java.io.Serializable{
 
 	int picSize;
 	int numPossiblities;
-	HashMap<String, ArrayList<Integer>> references;
 	
-	public void test(){
-		System.out.println("NN initalised");
-	}
-	
+	//Constructor
+	//TODO: Remove need for picSize to be known, make ImageProcessor handle this
+	//TODO: Add option to create multiple hidden layers
 	public NeuralNetwork(int picSize, int numPossiblities){
 		this.picSize = picSize;
 		this.numPossiblities = numPossiblities;
 
+		//Create the Neurons that are in the network
 		inputLayer = new ArrayList<Neuron>();
 		hiddenLayer1 = new ArrayList<Neuron>();
 		outputLayer = new ArrayList<Neuron>();
@@ -40,18 +39,10 @@ public class NeuralNetwork implements java.io.Serializable{
 		layers.add(hiddenLayer1);
 		layers.add(outputLayer);
 
-		references = new HashMap<String, ArrayList<Integer>>();
-		loadReferences(new File("src/Weights"));
-		inNeurons();
-		/*
-		try{
-			initNeurons();
-		}catch(TooManyNeuronsException e){
-			e.printStackTrace();
-		}
-		*/
+		initNeurons();
 	}
 	
+	//Clear the inputs for all layers
 	public void clearInputs(){
 		for(ArrayList<Neuron> l : layers){
 			for(Neuron n : l){
@@ -60,24 +51,10 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 	}
 	
-	public void loadReferences(File dir){
-		for(File f : dir.listFiles()){
-			try {
-				String key = f.getName().substring(0, 1);
-				ArrayList<Integer> vals;
-				vals = ImageProcessor.process(ImageIO.read(f), 10);
-				references.put(key, vals);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println("\n\n");
-	}
-	
-	//TODO: THIS ONE IS RIGHT
+	//Correct every Neuron in the hidden layer
+	//TODO: Allow for multiple hidden layers
 	public void correct(int actual){
 		Neuron n = hiddenLayer1.get(actual);
-
 		try {
 			n.correct();
 		} catch (InvalidInputException e) {
@@ -85,34 +62,8 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 	}
 	
-	public void correct(String actual, HashMap<String, Float> results){
-		for(int i = 0; i < hiddenLayer1.size(); i++){
-			String iStr = Character.toString((char) (i + 65));
-			float percentSimilar = computeSimilarity(actual, iStr);
-			float output = results.get(iStr);
-
-			System.out.println("1: " + actual + "\t2: " + iStr + "\t%: " + percentSimilar + "\t\tOut: " + output);
-
-			Neuron n = hiddenLayer1.get(i);
-			n.correct(percentSimilar, output);
-		}
-	}
-	
-	//Return how similar two characters are
-	private float computeSimilarity(String str1, String str2){
-		float similar = 0;
-		ArrayList<Integer> s1 = references.get(str1);
-		ArrayList<Integer> s2 = references.get(str2);
-		
-		for(int i = 0; i < s1.size(); i++){
-			similar += (s1.get(i) == s2.get(i)) ? 1 : 0;
-		}
-		
-		
-		return similar;
-	}
-	
 	//Returns a string contained in an image
+	//TODO: This name is stupid
 	public String processMultiImage(BufferedImage input){
 		String result = "";
 
@@ -130,6 +81,7 @@ public class NeuralNetwork implements java.io.Serializable{
 		return result;		
 	}
 	
+	//TODO: This mehtod is not needed
 	public char process(BufferedImage input){
 		char ret = 0;
 		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
@@ -143,6 +95,7 @@ public class NeuralNetwork implements java.io.Serializable{
 	}
 
 	//Gives input to the input layer, then runs all layers sequentially
+	//TODO: Allow for multiple layers
 	private void fireNeurons(ArrayList<Float> numbers){
 		for(int i = 0; i < inputLayer.size(); i++){
 			Neuron n = inputLayer.get(i);
@@ -168,60 +121,35 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 	}
 
+	/*
+	 * Returns a Hashmap. In this hashmap is each letter of the alphabet and how 'stimulated' its corresponding Neuron is
+	 * Essentially, this allows us to see what's going on in between the hidden & output layers
+	 */
 	public HashMap<Character, Float> trainingProcess(BufferedImage input){
 		HashMap<Character, Float> results = new HashMap<Character, Float>();
+		
+		//Process an image through the network
 		ArrayList<Float> numbers = convIntListToFloatList(ImageProcessor.process(input, 10));
 		clearInputs();
-		
 		fireNeurons(numbers);
 		
 		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
 		results = out.getRes();
+
 		return results;		
 	}
 	
+	//Return the output from the output layer
 	public char getGuess(){
 		OutputNeuron out = (OutputNeuron) outputLayer.get(0);
 		return out.getGuess();
 	}
 	
-	
-	//Read neurons if they exist, else create them
-	public void initNeurons() throws TooManyNeuronsException{
-		//Create the input layer
-		int res = (int) Math.pow(picSize, 2);
-		for(int i = 0; i < res; i++){
-			inputLayer.add(new InputNeuron(hiddenLayer1));
-		}
-		
-		//Load the hidden & outer layer, else create a new one
-		try{
-			File neuronDir = new File("src/neurons/");
-			for(File f : neuronDir.listFiles()){
-				Neuron n = (Neuron) PersistanceManager.read(f);
-				if(n instanceof OutputNeuron){
-					outputLayer.add(n);
-				}else{
-					hiddenLayer1.add(n);
-				}
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		//Verify that the correct number of HiddenNeurons have been created
-		if(hiddenLayer1.size() > numPossiblities){
-			throw new TooManyNeuronsException(hiddenLayer1.size(), numPossiblities);
-		}else{
-			//Create more neurons if we do not have enough
-			while(hiddenLayer1.size() < numPossiblities){
-				hiddenLayer1.add(new Neuron(numPossiblities, outputLayer));
-			}
-		}
-	}
-	
-	public void inNeurons(){
+	//Create the Neurons
+	public void initNeurons(){
 		int numInputs = (int) Math.pow(picSize, 2);
+
+		//Create the ouptut layer
 		OutputNeuron out = new OutputNeuron(numPossiblities);
 		for(int i = 0; i < numPossiblities; i++){
 			try {
@@ -232,21 +160,15 @@ public class NeuralNetwork implements java.io.Serializable{
 		}
 		outputLayer.add(out);
 		
+		//Create the hidden layer
+		//TODO: Allow for multiple layers
 		for(int i = 0; i < numPossiblities; i++){
 			Neuron n = new Neuron(numInputs, outputLayer);
-			ArrayList<Float> initVals = convIntListToFloatList(references.get(Character.toString((char) (i+65))));
 
-			//TODO: Is any of this crap necessary?
+			//Set all weights to be 0.5 initally
 			for(int j = 0; j < numInputs; j++){
 				try {
-					if(initVals.get(j) == 1){
-						//n.addWeight(0.75f);
-						n.addWeight(0.5f);
-					}else{
-						//n.addWeight(0);
-						n.addWeight(0.5f);
-					}
-					//n.addWeight(initVals.get(j));
+					n.addWeight(0.5f);
 				} catch (TooManyInputsException e) {
 					e.printStackTrace();
 				}
@@ -254,28 +176,18 @@ public class NeuralNetwork implements java.io.Serializable{
 			hiddenLayer1.add(n);
 		}
 		
+		//Create the input layer
 		for(int i = 0; i < numInputs; i++){
 			inputLayer.add(new InputNeuron(hiddenLayer1));
 		}
 	}
 	
+	//Write the network to a file
 	public void saveNetwork(){
-		PersistanceManager.write(this);
+		PersistanceManager.writeNN(this, new File("src/neurons.data"));
 	}
 	
-	//Write the hidden & outer layers
-	//TODO: Remove?
-	public void saveNeurons(){
-		//Hidden layer
-		for(int i = 0; i < hiddenLayer1.size(); i++){
-			PersistanceManager.write(hiddenLayer1.get(i), Integer.toString(i));
-		}
-		//Output layer
-		for(int i = 0; i < outputLayer.size(); i++){
-			PersistanceManager.write(outputLayer.get(i), "output");
-		}
-	}
-
+	//Converts a list of integers to a list of floats
 	private ArrayList<Float> convIntListToFloatList(ArrayList<Integer> l){
 		ArrayList<Float> ret = new ArrayList<Float>();
 		for(Integer n : l){

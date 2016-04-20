@@ -71,7 +71,7 @@ public class AutoTrainer {
 			}
 			System.out.println("Epoch: " + i + "\tNumber wrong: " + numWrong);
 			if(numWrong == 0){
-				PersistanceManager.write(nn);
+				PersistanceManager.writeNN(nn, new File("src/neurons/nn.data"));
 				break;
 			}
 		}

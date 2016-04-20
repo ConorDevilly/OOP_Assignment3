@@ -83,7 +83,6 @@ public class GUIController {
 		ansBox.clear();
 
 		if(!guess.getText().equals(ans)){
-			//nn.correct(ans, results);
 			//Convert the char to an int form (ASCII table).
 			int actual = ans - 65;
 			nn.correct(actual);
