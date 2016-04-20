@@ -11,6 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/*
+ * A GUI to train the NN
+ */
 public class Trainer extends Application{
 	public static void main(String args[]){
 		launch(args);
@@ -18,7 +21,6 @@ public class Trainer extends Application{
 	
 	NeuralNetwork nn;
 	GUIController ctrl;
-	//ObservableList<Result> results;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -26,11 +28,12 @@ public class Trainer extends Application{
 		Parent root = loader.load();
 
 		nn = PersistanceManager.readNN(new File("src/neurons/nn.data"));
-		//Check nn read successfully
+		//Check nn read successfully, if not, create a new one
 		if(nn == null){
 			nn = new NeuralNetwork(10, 26);
 		}
 
+		//Get the Controller so we can pass it in the NN
 		ctrl = loader.<GUIController>getController();
 		ctrl.init(nn);
 
@@ -40,9 +43,9 @@ public class Trainer extends Application{
 		stage.show();
 	}
 	
+	//Write the network
 	@Override
 	public void stop(){
-		System.out.println("Stopping...");
 		nn.saveNetwork();
 	}
 }

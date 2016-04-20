@@ -14,9 +14,7 @@
     <padding><Insets top="15" bottom="15"/></padding>
 
     <HBox spacing="10" alignment="center" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
-	    <Label text="Dir:"/>
-	    <TextField />
-	    <Button text="Select" onAction="#openFileChooser"/>
+	    <Button text="Select Dir" onAction="#openFileChooser"/>
     </HBox>
 
     <TableView fx:id="resTable" GridPane.columnIndex="0" GridPane.rowIndex="1">
@@ -25,7 +23,7 @@
 			    <cellValueFactory><PropertyValueFactory property="key" />
 			    </cellValueFactory>
 		    </TableColumn>
-		    <TableColumn fx:id="percentCol" text="Percent">
+		    <TableColumn fx:id="percentCol" text="Stimulation Level">
 			    <cellValueFactory><PropertyValueFactory property="val" />
 			    </cellValueFactory>
 		    </TableColumn>
