@@ -3,7 +3,7 @@ package com.conordevilly.ocr.neuralnetwork;
 import java.util.ArrayList;
 
 /*
- * Simple perceptron.
+ * Input Neuron
  * Takes a single integer input and forwards it another layer
  */
 public class InputNeuron extends Neuron{

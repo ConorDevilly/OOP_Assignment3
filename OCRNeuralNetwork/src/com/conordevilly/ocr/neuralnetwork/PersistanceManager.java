@@ -8,39 +8,28 @@ import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
+/*
+ * Persistance Manager
+ * Utility class for reading & writing networks
+ */
 public class PersistanceManager {
-	public static Neuron read(File f){
-		Neuron n = null;
-		try{
-			FileInputStream in = new FileInputStream(f);
-			ObjectInputStream reader = new ObjectInputStream(in);
-			n = (Neuron) reader.readObject();
-			reader.close();
-			in.close();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return n;
-	}
 	
+	//Read a Network from a given file
 	public static NeuralNetwork readNN(File f) throws FileNotFoundException{
 		NeuralNetwork nn = null;
 		FileInputStream in = new FileInputStream(f);
-
 		try {
 			ObjectInputStream reader = new ObjectInputStream(in);
 			nn = (NeuralNetwork) reader.readObject();
 			reader.close();
 			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return nn;
 	}
 	
+	//Write a given Network to a given File
 	public static void writeNN(NeuralNetwork nn, File fout){
 		try{
 			FileOutputStream out = new FileOutputStream(fout);
@@ -49,18 +38,6 @@ public class PersistanceManager {
 			writer.close();
 			out.close();
 		}catch(IOException e){
-			e.printStackTrace();
-		}
-	}
-	
-	public static void write(Neuron n, String name){
-		try{
-			FileOutputStream out = new FileOutputStream(new File("src/neurons/" + name + ".data"));
-			ObjectOutputStream writer = new ObjectOutputStream(out);
-			writer.writeObject(n);
-			writer.close();
-			out.close();
-		}catch (IOException e){
 			e.printStackTrace();
 		}
 	}
