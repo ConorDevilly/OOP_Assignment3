@@ -19,7 +19,7 @@ public class OCRRESTClient{
 	
 	//Sends a string to the service
 	public String send(String toSend){
-		String ret = null;
+		String ret = "";
 
 		try {
 			//Put the data into a JSON object

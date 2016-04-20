@@ -2,9 +2,17 @@ package com.conordevilly.ocr.ocrcamera;
 
 import java.io.ByteArrayOutputStream;
 
+import com.conordevilly.ocr.ocrcamera.RestTask.AsyncResponse;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -16,16 +24,21 @@ import android.view.MenuItem;
  * User takes a picture which is sent back to the OCR Service
  * The service then sends a guess & displays the guess as a popup
  */
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements AsyncResponse{
 	
 	//TODO: Make point to dyndns
-	private final String url = "http://192.168.1.124:8080/TestingREST";
+	private final String url = "http://147.252.143.171:8080/TestingREST";
+	Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		//setContentView(R.layout.activity_main);
+		startCam();
+	}
+	
+	public void startCam(){
+		intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(intent, 0);
 	}
 
@@ -50,9 +63,15 @@ public class MainActivity extends Activity{
 		String encoded = new String(Base64.encode(bytes, Base64.NO_WRAP));
 
 		try {
-			//Get the return, purely to sync the threads
-			String ret = new RestTask(url, MainActivity.this).execute(encoded).get();
-			Log.i("OCR", "Guessed: " + ret);
+			//Check connection available
+			ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+			if (networkInfo != null && networkInfo.isConnected()) {
+				new RestTask(url, MainActivity.this, this).execute(encoded);
+			} else {
+				Log.e("OCR", "No network connection available");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,5 +88,23 @@ public class MainActivity extends Activity{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+
+	@Override
+	public void processingFinished(String out) {
+		Builder alertBuilder = new AlertDialog.Builder(this);
+		AlertDialog dia = alertBuilder.create();
+		dia.setTitle("Guess");
+		dia.setMessage("Guess: " + out);
+
+		dia.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//Restart the camera
+				startCam();
+			}
+		});
+		dia.show();
 	}
 }

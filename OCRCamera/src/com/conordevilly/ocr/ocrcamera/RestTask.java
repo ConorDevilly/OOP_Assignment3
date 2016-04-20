@@ -1,10 +1,7 @@
 package com.conordevilly.ocr.ocrcamera;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 /*
  * Task to connect to the internet to send the data
@@ -13,10 +10,17 @@ import android.util.Log;
 public class RestTask extends AsyncTask<String, Void, String>{
 	String url;
 	Context context;
+	
+	//Create an interface to send resposne back to main
+	public interface AsyncResponse{
+		void processingFinished(String out);
+	}
+	public AsyncResponse delegate = null;
 
-	public RestTask(String url, Context context){
+	public RestTask(String url, Context context, AsyncResponse delegate){
 		this.url = url;
 		this.context = context;
+		this.delegate = delegate;
 	}
 	
 	//Execute the task
@@ -27,17 +31,12 @@ public class RestTask extends AsyncTask<String, Void, String>{
 		String toSend = params[0];
 		String guess = cli.send(toSend);
 
-		Log.i("OCR Guess:", guess);
 		return guess;
 	}
 	
 	//Display the guess once the task has been completed
 	protected void onPostExecute(String result){
 		super.onPostExecute(result);
-		Builder alertBuilder = new AlertDialog.Builder(context);
-		AlertDialog dia = alertBuilder.create();
-		dia.setTitle("Guess");
-		dia.setMessage("Guess: " + result);
-		dia.show();
+		delegate.processingFinished(result);
 	}
 }
