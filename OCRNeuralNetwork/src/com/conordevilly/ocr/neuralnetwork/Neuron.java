@@ -2,9 +2,13 @@ package com.conordevilly.ocr.neuralnetwork;
 
 import java.util.ArrayList;
 
-public abstract class Neuron implements java.io.Serializable{
-	
-	private static final long serialVersionUID = 1339248459008642578L;
+/*
+ * Base Neuron calass
+ */
+public class Neuron implements java.io.Serializable{
+	private static final long serialVersionUID = -2651544557240828084L;
+
+	//Class variables
 	float bias;
 	ArrayList<Float> weights;
 	ArrayList<Float> inputs;
@@ -31,6 +35,7 @@ public abstract class Neuron implements java.io.Serializable{
 		feedforward();
 	}
 	
+	//Clear the neuron's inputs
 	public void clearInputs(){
 		inputs.clear();
 	}
@@ -55,7 +60,8 @@ public abstract class Neuron implements java.io.Serializable{
 	
 	//Set weights
 	public void setWeights(ArrayList<Float> w) throws SizeMismatchException{
-		if(arrSizeMatch(maxInputs, w.size())){
+		//Check the size of the inputted array matches the number of inputs
+		if(numMatch(maxInputs, w.size())){
 			this.weights = w;
 		}else{
 			throw new SizeMismatchException(maxInputs, w.size());
@@ -64,6 +70,7 @@ public abstract class Neuron implements java.io.Serializable{
 	
 	//Add a weight
 	public void addWeight(float w) throws TooManyInputsException{
+		//Check there is space in the weight arraylist before we add it
 		if(inputSizeOk(weights.size() + 1)){
 			weights.add(w);
 		}else{
@@ -84,24 +91,28 @@ public abstract class Neuron implements java.io.Serializable{
 	}
 	
 	//Basic template for processing inputs
+	//Should probably be renamed to summation to reflect NN concepts
 	public void process() throws SizeMismatchException{
 		output = 0;
 		
 		//Check that the size of the weights and inputs match before processing 
 		if(!arrSizeMatch(weights, inputs)) throw new SizeMismatchException(inputs.size(), weights.size());
 		
+		//Make the output = sum of all inputs once their weights are factored in
 		for(int i = 0; i < inputs.size(); i++){
-			output += calcOutputDif(i);
+			output += equivInput(i);
 		}
 		output *= bias;
 	}
 	
-	public float calcOutputDif(int index){
+	//Sets what an input should be once its weight is factored into account
+	protected float equivInput(int index){
 		return (inputs.get(index) * weights.get(index));
 	}
 	
 	//Broken. Possible fix is to modify the summation function to only increase chance iff positive value. 
 	//I.e: A black pix "activates" assoc. neuron
+	//TODO: THIS ONE IS RIGHT
 	public void correct() throws InvalidInputException{
 		float weight;
 		float input;
@@ -133,8 +144,6 @@ public abstract class Neuron implements java.io.Serializable{
 			
 			weights.set(i, weight);
 		}
-		//DEBUG
-		//System.out.println(this.toString());
 	}
 	
 	//DEBUG
@@ -246,11 +255,13 @@ public abstract class Neuron implements java.io.Serializable{
 		return output;
 	}
 	
-	//Printable rep of neuron
+	/*
+	 * Returns a representation of the neuron in the form:
+	 * Bias: Weight1, Weight2, ... WeightN
+	 */
 	public String toString(){
 		String s = bias + ": ";
 		for(int i = 0; i < weights.size(); i++){
-			//if(i % 10 == 0) s += "\n";
 			s += (weights.get(i).toString() + ", ");
 		}
 		return s;
@@ -263,10 +274,12 @@ public abstract class Neuron implements java.io.Serializable{
 	private boolean inputSizeOk(int num){
 		return (num <= maxInputs);
 	}
+
+	//Check the size of two arrays or two numbers match
 	private boolean arrSizeMatch(ArrayList<Float> arr1, ArrayList<Float> arr2){
-		return arrSizeMatch(arr1.size(), arr2.size());
+		return numMatch(arr1.size(), arr2.size());
 	}
-	private boolean arrSizeMatch(int num1, int num2){
+	private boolean numMatch(int num1, int num2){
 		return (num1 == num2);
 	}
 }

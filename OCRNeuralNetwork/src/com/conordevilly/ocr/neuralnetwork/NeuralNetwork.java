@@ -74,6 +74,7 @@ public class NeuralNetwork implements java.io.Serializable{
 		System.out.println("\n\n");
 	}
 	
+	//TODO: THIS ONE IS RIGHT
 	public void correct(int actual){
 		Neuron n = hiddenLayer1.get(actual);
 
@@ -214,7 +215,7 @@ public class NeuralNetwork implements java.io.Serializable{
 		}else{
 			//Create more neurons if we do not have enough
 			while(hiddenLayer1.size() < numPossiblities){
-				hiddenLayer1.add(new HiddenNeuron(numPossiblities, outputLayer));
+				hiddenLayer1.add(new Neuron(numPossiblities, outputLayer));
 			}
 		}
 	}
@@ -232,7 +233,7 @@ public class NeuralNetwork implements java.io.Serializable{
 		outputLayer.add(out);
 		
 		for(int i = 0; i < numPossiblities; i++){
-			HiddenNeuron n = new HiddenNeuron(numInputs, outputLayer);
+			Neuron n = new Neuron(numInputs, outputLayer);
 			ArrayList<Float> initVals = convIntListToFloatList(references.get(Character.toString((char) (i+65))));
 
 			//TODO: Is any of this crap necessary?
