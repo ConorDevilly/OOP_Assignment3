@@ -34,7 +34,7 @@ public class AutoTrainer {
 
 	public AutoTrainer(){
 		try{
-			nn = PersistanceManager.readNN(new File("src/neurons/nn.data"));
+			nn = PersistanceManager.readNN(new File("Data/nn.data"));
 		}catch(FileNotFoundException e){
 			System.out.println("WARN: NN data file not found.");
 			System.out.println("Creating new nn...");
@@ -87,7 +87,7 @@ public class AutoTrainer {
 			
 			//If no incorrect answers, write the network
 			if(numWrong == 0){
-				PersistanceManager.writeNN(nn, new File("src/neurons/nn.data"));
+				PersistanceManager.writeNN(nn, new File("Data/nn.data"));
 				break;
 			}
 		}

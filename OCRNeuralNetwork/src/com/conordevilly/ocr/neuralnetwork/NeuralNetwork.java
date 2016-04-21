@@ -184,7 +184,7 @@ public class NeuralNetwork implements java.io.Serializable{
 	
 	//Write the network to a file
 	public void saveNetwork(){
-		PersistanceManager.writeNN(this, new File("src/neurons.data"));
+		PersistanceManager.writeNN(this, new File("Data/nn.data"));
 	}
 	
 	//Converts a list of integers to a list of floats

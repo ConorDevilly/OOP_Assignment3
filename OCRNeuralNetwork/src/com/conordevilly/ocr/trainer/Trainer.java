@@ -27,7 +27,7 @@ public class Trainer extends Application{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI.fxml"));
 		Parent root = loader.load();
 
-		nn = PersistanceManager.readNN(new File("src/neurons/nn.data"));
+		nn = PersistanceManager.readNN(new File("Data/nn.data"));
 		//Check nn read successfully, if not, create a new one
 		if(nn == null){
 			nn = new NeuralNetwork(10, 26);
